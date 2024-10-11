@@ -6,11 +6,19 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:37:09 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/11 17:00:10 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/10/11 17:10:44 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cube3d.h"
+
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+{
+	char	*dst;
+
+	dst = data->addr + (y * 1080 + x * (data->bits_per_pixel / 8));
+	*(unsigned int*)dst = color;
+}
 
 double	get_time(void)
 {
@@ -123,10 +131,7 @@ void	cube3d(t_data *data)
 	}
 	if (side == 1)
 		color = color / 2;
-
-	oldtime = time;
-	time = get_time() - firsttime;
-	frametime = (time - oldtime) / 1000.0;
+	
 	//-----------//
 	mlx_loop(data->mlx);
 }
