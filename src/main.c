@@ -3,153 +3,266 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: vdarras <vdarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 14:37:09 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/14 16:48:41 by najeuneh         ###   ########.fr       */
+/*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
+/*   Updated: 2024/10/14 19:04:01 by vdarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cube3d.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+size_t	ft_strlen2(const char *s)
 {
-	char	*dst;
+	int		i;
+	char	*str;
 
-	dst = data->img.addr + (y * 1080 + x * (data->img.bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	i = 0;
+	if (s == NULL)
+		return (0);
+	str = (char *)s;
+	while (str[i])
+		i++;
+	return (i);
 }
 
-double	get_time(void)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	struct timeval	current_time;
+	char	*str;
+	int		i;
+	int		j;
+	int		len;
 
-	gettimeofday(&current_time, NULL);
-	return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
-}
-
-void	cube3d(t_data *data)
-{
-	int		x;
-	int		stepX;
-	int		stepY;
-	int		hit;
-	int		side;
-	int		mapY;
-	int		mapX;
-	int		drawStart;
-	int		drawend;
-	int		lineHeight;
-	int		color;
-	double	cameraX;
-	double	raydirX;
-	double	raydirY;
-	double 	sideDistX;
-	double 	sideDistY;
-	double 	deltaDistY;
-	double 	deltaDistX;
-	double	perpWallDist;
-
-	hit = 0;
-	x = 0;
-	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, 1920, 1080, "Cube3D");
-	data->img.img = mlx_new_image(data->mlx, 1920, 1080);
-	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
-	mapX = (int)data->pl_x;
-	mapY = (int)data->pl_y;
-	//calculer le raytracing
-	while (x < 1920)
+	len = (ft_strlen2(s1) + ft_strlen2(s2));
+	i = 0;
+	j = 0;
+	str = malloc(sizeof(char) * len + 1);
+	if (str == NULL)
+		return (free(str), free(s1), NULL);
+	while (s1 != NULL && s1[i])
 	{
-		cameraX = 2 * x / 1920 - 1;
-		raydirX = data->dirX + data->planeX * cameraX; //position X de la camera
-		raydirY = data->dirY + data->planeY * cameraX; //position Y de la camera
-		if (raydirX == 0)
-			deltaDistX = 1e30;
-		else
-			deltaDistX = fabs(1.0 / raydirX);
-		if (raydirY == 0)
-			deltaDistY = 1e30;
-		else
-			deltaDistY = fabs(1.0 / raydirY);
-		if (raydirX < 0)
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2 != NULL && s2[j])
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	free (s1);
+	return (str);
+}
+
+char	*recup_map(int fd)
+{
+	char	*line;
+	char	*buffer;
+	int		bs;
+
+	bs = 0;
+	line = NULL;
+	buffer = malloc(sizeof(char) * (1 + 1));
+	if (!buffer)
+		return (line);
+	while (bs >= 0)
+	{
+		bs = read(fd, buffer, 1);
+		if (bs == -1)
+			return (free(buffer), free(line), NULL);
+		if (bs == 0)
+			break ;
+		buffer[bs] = '\0';
+		line = ft_strjoin(line, buffer);
+		if (!line)
+			return (free(buffer), NULL);
+	}
+	line = ft_strjoin(line, buffer);
+	close(fd);
+	return (free(buffer), line);
+}
+
+void	player_pos(char *line, t_data *data)
+{
+	int	i;
+
+	data->pl_x = 0;
+	data->pl_y = 0;
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == 'P')
+			break;
+		else if (line[i] == '\n')
 		{
-			stepX = -1;
-			sideDistX = (data->pl_x - mapX) * deltaDistX;
+			data->pl_x = 0;
+			data->pl_y++;
+			i++;
 		}
 		else
 		{
-			stepX = 1;
-			sideDistX = (mapX + 1.0 - data->pl_x) * deltaDistX;
-		}
-		if (raydirY < 0)
-		{
-			stepY = -1;
-			sideDistY = (data->pl_y - mapY) * deltaDistY;
-		}
-		else
-		{
-			stepY = 1;
-			sideDistY = (mapY + 1.0 - data->pl_y) * deltaDistY;
-		}
-		while (hit == 0)
-		{
-			if (sideDistX < sideDistY)
-			{
-				sideDistX += deltaDistX;
-				mapX += stepX;
-				side = 0;
-			}
-			else
-			{
-				sideDistY += deltaDistY;
-				mapY += stepY;
-				side = 1;
-			}
-			if (data->map[mapX][mapY] == '1')
-				hit = 1;
-		}
-		if (side == 0)
-			perpWallDist = sideDistX - deltaDistX;
-		else
-			perpWallDist = sideDistY - deltaDistY;
-		lineHeight = 1080 / perpWallDist;
-		drawStart = -1 * lineHeight / 2 + 1080 / 2;
-		if (drawStart < 0)
-			drawStart = 0;
-		drawend = lineHeight / 2 + 1080 / 2;
-		if (drawend >= 1080)
-			drawend = 1080 - 1;
-		//choose wall color
-		switch(data->map[mapX][mapY])
-		{
-			case 1:  color = RGB_Red;  break; //red
-			case 2:  color = RGB_Green;  break; //green
-			case 3:  color = RGB_Blue;   break; //blue
-			case 4:  color = RGB_White;  break; //white
-			default: color = RGB_Yellow; break; //yellow
-		}
-		if (side == 1)
-			color = color / 2;
-		x++;
-		int	y = 0;
-		while (y < 1080)
-		{
-			my_mlx_pixel_put(data, y, x, color);
-			y++;
+			i++;
+			data->pl_x++;
 		}
 	}
-	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
-	//-----------//
-	mlx_loop(data->mlx);
+	data->pl_x += 0.5;
+	data->pl_y += 0.5;
 }
-int	main(int ac, char **av)
+
+t_data	init_map(int map)
 {
-	t_data data;
-	int	fd;
-	(void)ac;
-	fd = open(av[1], O_RDONLY);
-	data = init_map(fd);
-	cube3d(&data);
-	printf("x = %f, y = %f\n", data.pl_x, data.pl_y);
+	t_data	data;
+	int		x;
+	int		y;
+
+	x = 0;
+	y = 0;
+	data.dirX = 0;
+	data.dirY = 1;
+	data.planeX = 0.66;	 
+	data.planeY = 0;	
+	data.line = recup_map(map);
+	data.map = ft_split(data.line, '\n');
+	while (data.map[y][x])
+		x++;
+	data.map_x = x;
+	while (data.map[y])
+		y++;
+	data.map_y = y;
+	player_pos(data.line, &data);
+	return (data);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vdarras <vdarras@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
+/*   Updated: 2024/10/14 18:57:47 by vdarras          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../inc/cube3d.h"
+
+size_t	ft_strlen2(const char *s)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	if (s == NULL)
+		return (0);
+	str = (char *)s;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*str;
+	int		i;
+	int		j;
+	int		len;
+
+	len = (ft_strlen2(s1) + ft_strlen2(s2));
+	i = 0;
+	j = 0;
+	str = malloc(sizeof(char) * len + 1);
+	if (str == NULL)
+		return (free(str), free(s1), NULL);
+	while (s1 != NULL && s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2 != NULL && s2[j])
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	free (s1);
+	return (str);
+}
+
+char	*recup_map(int fd)
+{
+	char	*line;
+	char	*buffer;
+	int		bs;
+
+	bs = 0;
+	line = NULL;
+	buffer = malloc(sizeof(char) * (1 + 1));
+	if (!buffer)
+		return (line);
+	while (bs >= 0)
+	{
+		bs = read(fd, buffer, 1);
+		if (bs == -1)
+			return (free(buffer), free(line), NULL);
+		if (bs == 0)
+			break ;
+		buffer[bs] = '\0';
+		line = ft_strjoin(line, buffer);
+		if (!line)
+			return (free(buffer), NULL);
+	}
+	line = ft_strjoin(line, buffer);
+	close(fd);
+	return (free(buffer), line);
+}
+
+void	player_pos(char *line, t_data *data)
+{
+	int	i;
+
+	data->pl_x = 0;
+	data->pl_y = 0;
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == 'P')
+			break;
+		else if (line[i] == '\n')
+		{
+			data->pl_x = 0;
+			data->pl_y++;
+			i++;
+		}
+		else
+		{
+			i++;
+			data->pl_x++;
+		}
+	}
+	data->pl_x += 0.5;
+	data->pl_y += 0.5;
+}
+
+t_data	init_map(int map)
+{
+	t_data	data;
+	int		x;
+	int		y;
+
+	x = 0;
+	y = 0;
+	data.dirX = 0;
+	data.dirY = 1;
+	data.planeX = 0.66;	 
+	data.planeY = 0;	
+	data.line = recup_map(map);
+	data.map = ft_split(data.line, '\n');
+	while (data.map[y][x])
+		x++;
+	data.map_x = x;
+	while (data.map[y])
+		y++;
+	data.map_y = y;
+	player_pos(data.line, &data);
+	return (data);
 }

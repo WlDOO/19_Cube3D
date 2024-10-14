@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: vdarras <vdarras@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/11 15:34:26 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/10/14 19:04:24 by vdarras          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	player_pos(char *line, t_data *data)
 	while (line[i])
 	{
 		if (line[i] == 'P')
-			return ;
+			break;
 		else if (line[i] == '\n')
 		{
 			data->pl_x = 0;
@@ -105,6 +105,8 @@ void	player_pos(char *line, t_data *data)
 			data->pl_x++;
 		}
 	}
+	data->pl_x += 0.5;
+	data->pl_y += 0.5;
 }
 
 t_data	init_map(int map)
@@ -115,10 +117,10 @@ t_data	init_map(int map)
 
 	x = 0;
 	y = 0;
-	data.dirX = -1;
-	data.dirY = 0;
-	data.planeX = 0;	
-	data.planeY = 0.66;	
+	data.dirX = 0;
+	data.dirY = 1;
+	data.planeX = 0.66;	 
+	data.planeY = 0;	
 	data.line = recup_map(map);
 	data.map = ft_split(data.line, '\n');
 	while (data.map[y][x])
@@ -127,6 +129,6 @@ t_data	init_map(int map)
 	while (data.map[y])
 		y++;
 	data.map_y = y;
-	player_pos(data.line, &data);	
+	player_pos(data.line, &data);
 	return (data);
 }
