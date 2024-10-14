@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/11 16:58:22 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:27:20 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,15 @@
 #define RGB_White  0xFFFFFF  // Blanc
 #define RGB_Yellow 0xFFFF00  // Jaune
 
+typedef	struct s_img
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_img;
+
 typedef struct s_data
 {
 	char		**map;
@@ -43,6 +52,7 @@ typedef struct s_data
 	double		dirY;
 	double		planeX;
 	double		planeY;
+	t_img		img;
 }				t_data;
 
 char	**ft_split(char const *s, char c);

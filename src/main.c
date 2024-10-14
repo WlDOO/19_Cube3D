@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:37:09 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/11 17:10:44 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:48:41 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * 1080 + x * (data->bits_per_pixel / 8));
+	dst = data->img.addr + (y * 1080 + x * (data->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
@@ -49,89 +49,97 @@ void	cube3d(t_data *data)
 	double 	deltaDistY;
 	double 	deltaDistX;
 	double	perpWallDist;
-	double	firsttime = 0;
-	double	time = 0; //time of current frame
-	double	oldtime = 0; //time of previous frame
-	double	frametime;
 
 	hit = 0;
 	x = 0;
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, 1920, 1080, "Cube3D");
-	mapX = data->pl_x;
-	mapY = data->pl_y;
+	data->img.img = mlx_new_image(data->mlx, 1920, 1080);
+	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
+	mapX = (int)data->pl_x;
+	mapY = (int)data->pl_y;
 	//calculer le raytracing
-	cameraX = 2 * x / 1920 - 1;
-	raydirX = data->dirX + data->planeX * cameraX; //position X de la camera
-	raydirY = data->dirY + data->planeY * cameraX; //position Y de la camera
-	if (raydirX == 0)
-		deltaDistX = 1e30;
-	else
-		deltaDistX = fabs(1.0 / raydirY);
-	if (raydirY == 0)
-		deltaDistY = 1e30;
-	else
-		deltaDistY = fabs(1.0 / raydirX);
-	if (raydirX < 0)
+	while (x < 1920)
 	{
-		stepX = -1;
-		sideDistX = (data->pl_x - mapX) * deltaDistX;
-	}
-	else
-	{
-		stepX = 1;
-		sideDistX = (mapX + 1.0 - data->pl_x) * deltaDistX;
-	}
-	if (raydirY < 0)
-	{
-		stepY = -1;
-		sideDistY = (data->pl_y - mapY) * deltaDistY;
-	}
-	else
-	{
-		stepY = 1;
-		sideDistY = (mapY + 1.0 - data->pl_y) * deltaDistY;
-	}
-	while (hit == 0)
-	{
-		if (sideDistX < sideDistY)
+		cameraX = 2 * x / 1920 - 1;
+		raydirX = data->dirX + data->planeX * cameraX; //position X de la camera
+		raydirY = data->dirY + data->planeY * cameraX; //position Y de la camera
+		if (raydirX == 0)
+			deltaDistX = 1e30;
+		else
+			deltaDistX = fabs(1.0 / raydirX);
+		if (raydirY == 0)
+			deltaDistY = 1e30;
+		else
+			deltaDistY = fabs(1.0 / raydirY);
+		if (raydirX < 0)
 		{
-			sideDistX += deltaDistX;
-			mapX += stepX;
-			side = 0;
+			stepX = -1;
+			sideDistX = (data->pl_x - mapX) * deltaDistX;
 		}
 		else
-        {
-			sideDistY += deltaDistY;
-			mapY += stepY;
-			side = 1;
+		{
+			stepX = 1;
+			sideDistX = (mapX + 1.0 - data->pl_x) * deltaDistX;
 		}
-		if (data->map[mapX][mapY] > 0)
-			hit = 1;
+		if (raydirY < 0)
+		{
+			stepY = -1;
+			sideDistY = (data->pl_y - mapY) * deltaDistY;
+		}
+		else
+		{
+			stepY = 1;
+			sideDistY = (mapY + 1.0 - data->pl_y) * deltaDistY;
+		}
+		while (hit == 0)
+		{
+			if (sideDistX < sideDistY)
+			{
+				sideDistX += deltaDistX;
+				mapX += stepX;
+				side = 0;
+			}
+			else
+			{
+				sideDistY += deltaDistY;
+				mapY += stepY;
+				side = 1;
+			}
+			if (data->map[mapX][mapY] == '1')
+				hit = 1;
+		}
+		if (side == 0)
+			perpWallDist = sideDistX - deltaDistX;
+		else
+			perpWallDist = sideDistY - deltaDistY;
+		lineHeight = 1080 / perpWallDist;
+		drawStart = -1 * lineHeight / 2 + 1080 / 2;
+		if (drawStart < 0)
+			drawStart = 0;
+		drawend = lineHeight / 2 + 1080 / 2;
+		if (drawend >= 1080)
+			drawend = 1080 - 1;
+		//choose wall color
+		switch(data->map[mapX][mapY])
+		{
+			case 1:  color = RGB_Red;  break; //red
+			case 2:  color = RGB_Green;  break; //green
+			case 3:  color = RGB_Blue;   break; //blue
+			case 4:  color = RGB_White;  break; //white
+			default: color = RGB_Yellow; break; //yellow
+		}
+		if (side == 1)
+			color = color / 2;
+		x++;
+		int	y = 0;
+		while (y < 1080)
+		{
+			my_mlx_pixel_put(data, y, x, color);
+			y++;
+		}
 	}
-	if (side == 0)
-		perpWallDist = sideDistX - deltaDistX;
-	else
-		perpWallDist = sideDistY - deltaDistY;
-	lineHeight = 1080 / perpWallDist;
-	drawStart = -lineHeight / 2 + 1080 / 2;
-	if (drawStart < 0)
-		drawStart = 0;
-	drawend = lineHeight / 2 + 1080 / 2;
-	if (drawend >= 1080)
-		drawend = 1080 - 1;
-	//choose wall color
-	switch(data->map[mapX][mapY])
-	{
-		case 1:  color = RGB_Red;  break; //red
-		case 2:  color = RGB_Green;  break; //green
-		case 3:  color = RGB_Blue;   break; //blue
-		case 4:  color = RGB_White;  break; //white
-		default: color = RGB_Yellow; break; //yellow
-	}
-	if (side == 1)
-		color = color / 2;
-	
+	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
 	//-----------//
 	mlx_loop(data->mlx);
 }
