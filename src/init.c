@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/16 17:37:21 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:04:20 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ t_data	init_map(int map)
 	data.key.key_a = 0;
 	data.key.key_d = 0;
 	data.key.key_esc = 0;
-	data.ray.color = RGB_White;
+	data.ray.color = RGB_Blue;
 	// data.planeX = 0.66;	 
 	// data.planeY = 0;
 	data.line = recup_map(map);
