@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+         #
+#    By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 17:24:32 by najeuneh          #+#    #+#              #
-#    Updated: 2024/10/25 17:55:28 by najeuneh         ###   ########.fr        #
+#    Updated: 2024/11/07 16:30:00 by sadegrae         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ NC=\033[0m
 CC = cc
 
 MY_SOURCES = src/main.c src/init.c src/ft_split.c src/raycasting/raycasting.c \
+				src/check_border.c src/parsing.c src/ft_error.c \
 
 CFLAGS = -Wall -Wextra -Werror
 

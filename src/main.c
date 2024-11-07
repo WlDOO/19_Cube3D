@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/22 15:54:12 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/07 16:40:50 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,11 @@ int main(int ac, char **av)
 	int fd;
 	(void)ac;
 	fd = open(av[1], O_RDONLY);
+	if (pars(av,ac,fd) == 0)
+		return (0);
 	data = init_map(fd);
+	if (pars_map(&data) == 0)
+		return (0);
 	cube3d(&data);
 	mlx_hook(data.win, 2, 1L << 0, &key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);

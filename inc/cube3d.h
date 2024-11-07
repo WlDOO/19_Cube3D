@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/21 14:06:46 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/07 16:30:38 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,17 @@ void	raycasting(t_data *data, int x);
 void	raycasting_suite(t_data *data);
 void	ray_while_hit(t_data *data);
 /*------------------*/
+
+/*----Parsing----*/
+int	pars(char **av,int ac, int fd);
+int	pars_map(t_data *game);
+
+int	check_border(t_data *game, int i, int j);
+int	check_border2(t_data *game, int j, int i, int start);
+int	check_border_last(t_data *game);
+int	check_border_first(t_data *game);
+int	check_border_mid(t_data *game);
+int	check_map(t_data *game);
+/*------------------*/
+
 #endif
