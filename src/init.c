@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/17 16:04:20 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/14 15:04:55 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,9 @@ void	player_pos(char *line, t_data *data)
 	i = -1;
 	while (line[++i])
 	{
-		if (line[i] == 'N' || line[i] == 'S' || line[i] == 'E' || line[i] == 'W')
-			break;
+		if (line[i] == 'N' || line[i] == 'S'
+			|| line[i] == 'E' || line[i] == 'W')
+			break ;
 		else if (line[i] == '\n')
 		{
 			data->pl_x = 0;
@@ -155,13 +156,11 @@ void	player_pos(char *line, t_data *data)
 	data->pl_y += 0.5;
 }
 
-t_data	init_map(int map)
+t_data	init_map(int map, int x)
 {
 	t_data	data;
-	int		x;
 	int		y;
 
-	x = 0;
 	y = 0;
 	data.key.key_R = 0;
 	data.key.key_L = 0;
@@ -171,8 +170,6 @@ t_data	init_map(int map)
 	data.key.key_d = 0;
 	data.key.key_esc = 0;
 	data.ray.color = RGB_Blue;
-	// data.planeX = 0.66;	 
-	// data.planeY = 0;
 	data.line = recup_map(map);
 	data.map = ft_split(data.line, '\n');
 	while (data.map[y][x])

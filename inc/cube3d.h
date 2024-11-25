@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
+/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/07 16:30:38 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/25 12:31:56 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ typedef struct s_data
 }				t_data;
 
 char	**ft_split(char const *s, char c);
-t_data	init_map(int map);
+t_data	init_map(int map, int x);
 
 /*----Raycasting----*/
 void	raycasting(t_data *data, int x);

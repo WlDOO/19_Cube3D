@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
+/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/07 16:40:50 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/25 14:21:59 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,53 +14,39 @@
 
 void	key_move(t_data *data)
 {
+	double	angle;
+
 	if (data->key.key_w == 1)
 	{
-		data->new_pl_x = data->pl_x + data->dirX * 0.1;
-		data->new_pl_y = data->pl_y + data->dirY * 0.1;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
-		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
-		}
+		if (data->map[(int)(data->pl_y + data->dirY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+			data->pl_y += data->dirY * 0.1;
+		if (data->map[(int)data->pl_y][(int)(data->pl_x + data->dirX * (0.1 + 0.01))] != '1')
+			data->pl_x += data->dirX * 0.1;
 	}
 	else if (data->key.key_s == 1)
 	{		
-		data->new_pl_x = data->pl_x - data->dirX * 0.1;
-		data->new_pl_y = data->pl_y - data->dirY * 0.1;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
-		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
-		}
+		if (data->map[(int)(data->pl_y - data->dirY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+			data->pl_y -= data->dirY * 0.1;
+		if (data->map[(int)data->pl_y][(int)(data->pl_x + data->dirX * (0.1 + 0.01))] != '1')
+			data->pl_x -= data->dirX * 0.1;
 	}
 	else if (data->key.key_d == 1)
 	{
-		data->newdirX = data->dirX * cos(PI / 2) - data->dirY * sin(PI / 2);
-		data->newdirY = data->dirX * sin(PI / 2) + data->dirY * cos(PI / 2);
-		data->new_pl_x = data->pl_x + data->newdirX * 0.07;
-		data->new_pl_y = data->pl_y + data->newdirY * 0.07;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
-		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
-		}
+    if (data->map[(int)(data->pl_y + data->planeY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+        data->pl_y += data->planeY * 0.1;
+    if (data->map[(int)data->pl_y][(int)(data->pl_x + data->planeX * (0.1 + 0.01))] != '1')
+        data->pl_x += data->planeX * 0.1;
 	}
 	else if (data->key.key_a == 1)
 	{
-		data->newdirX = data->dirX * cos(PI / 2) - data->dirY * sin(PI / 2);
-		data->newdirY = data->dirX * sin(PI / 2) + data->dirY * cos(PI / 2);
-		data->new_pl_x = data->pl_x - data->newdirX * 0.07;
-		data->new_pl_y = data->pl_y - data->newdirY * 0.07;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
-		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
-		}
+    if (data->map[(int)(data->pl_y - data->planeY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+        data->pl_y -= data->planeY * 0.1;
+    if (data->map[(int)data->pl_y][(int)(data->pl_x - data->planeX * (0.1 + 0.01))] != '1')
+        data->pl_x -= data->planeX * 0.1;
 	}
 	else if (data->key.key_L)
 	{
-		double angle = -0.03;
+		angle = -0.03;
 		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
 		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
 		data->new_planeX = data->planeX * cos(angle) - data->planeY * sin(angle);
@@ -72,7 +58,7 @@ void	key_move(t_data *data)
 	}
 	else if (data->key.key_R)
 	{
-		double angle = 0.03;
+		angle = 0.03;
 		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
 		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
 		data->new_planeX = data->planeX * cos(angle) - data->planeY * sin(angle);
@@ -192,39 +178,42 @@ int	key_release(int keycode, t_data *data)
 	return (0);
 }
 
-void my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	char *dst;
+	char	*dst;
 
 	dst = data->img.addr + (y * 1080 + x * (data->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
-double get_time(void)
+double	get_time(void)
 {
-	struct timeval current_time;
+	struct timeval	current_time;
 
 	gettimeofday(&current_time, NULL);
 	return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
 }
 
-void cube3d(t_data *data)
+void	cube3d(t_data *data)
 {
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, 1920, 1080, "Cube3D");
 	data->img.img = mlx_new_image(data->mlx, 1920, 1080);
-	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
+	data->img.addr = mlx_get_data_addr(data->img.img,
+			&data->img.bits_per_pixel, &data->img.line_length,
+			&data->img.endian);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	t_data data;
-	int fd;
+	t_data	data;
+	int		fd;
+
 	(void)ac;
 	fd = open(av[1], O_RDONLY);
-	if (pars(av,ac,fd) == 0)
+	if (pars(av, ac, fd) == 0)
 		return (0);
-	data = init_map(fd);
+	data = init_map(fd, 0);
 	if (pars_map(&data) == 0)
 		return (0);
 	cube3d(&data);

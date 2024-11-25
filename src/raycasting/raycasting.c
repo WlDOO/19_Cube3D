@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:50:19 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/22 15:58:29 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/25 02:24:38 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	raycasting(t_data *data, int x)
 	data->ray.mapY = (int)data->pl_y;
 	data->ray.hit = 0;
 	data->ray.cameraX = (2 * (double)x / (double)1920 - 1);
-	data->ray.raydirX = data->dirX + data->planeX * data->ray.cameraX; //position X de la camera
-	data->ray.raydirY = data->dirY + data->planeY * data->ray.cameraX; //position Y de la camera
+	data->ray.raydirX = data->dirX + data->planeX * data->ray.cameraX;
+	data->ray.raydirY = data->dirY + data->planeY * data->ray.cameraX;
 	if (data->ray.raydirX == 0)
 		data->ray.deltaDistX = 1e30;
 	else
@@ -31,12 +31,14 @@ void	raycasting(t_data *data, int x)
 	if (data->ray.raydirX < 0)
 	{
 		data->ray.stepX = -1;
-		data->ray.sideDistX = (data->pl_x - data->ray.mapX) * data->ray.deltaDistX;
+		data->ray.sideDistX = (data->pl_x - data->ray.mapX)
+			* data->ray.deltaDistX;
 	}
 	else
 	{
 		data->ray.stepX = 1;
-		data->ray.sideDistX = (data->ray.mapX + 1.0 - data->pl_x) * data->ray.deltaDistX;
+		data->ray.sideDistX = (data->ray.mapX + 1.0 - data->pl_x)
+			* data->ray.deltaDistX;
 	}
 }
 
@@ -45,12 +47,14 @@ void	raycasting_suite(t_data *data)
 	if (data->ray.raydirY < 0)
 	{
 		data->ray.stepY = -1;
-		data->ray.sideDistY = (data->pl_y - data->ray.mapY) * data->ray.deltaDistY;
+		data->ray.sideDistY = (data->pl_y - data->ray.mapY)
+			* data->ray.deltaDistY;
 	}
 	else
 	{
 		data->ray.stepY = 1;
-		data->ray.sideDistY = (data->ray.mapY + 1.0 - data->pl_y) * data->ray.deltaDistY;
+		data->ray.sideDistY = (data->ray.mapY + 1.0 - data->pl_y)
+			* data->ray.deltaDistY;
 	}
 }
 
