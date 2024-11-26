@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/25 16:39:17 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/26 21:43:25 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 
 void	look_dir(t_data *data)
 {
-	if (data->map[(int)data->pl_y][(int)data->pl_y] == 'N')
+	if (data->map[(int)data->pl_y][(int)data->pl_x] == 'N')
 	{
 		data->dirX = 0;
 		data->dirY = -1;
 	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_y] == 'S')
+	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'S')
 	{
 		data->dirX = 0;
 		data->dirY = 1;
 	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_y] == 'E')
+	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'E')
 	{
 		data->dirX = 1;
 		data->dirY = 0;
 	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_y] == 'W')
+	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'W')
 	{
 		data->dirX = -1;
 		data->dirY = 0;
@@ -38,22 +38,22 @@ void	look_dir(t_data *data)
 
 void	look_plane(t_data *data)
 {
-	if (data->map[(int)data->pl_y][(int)data->pl_y] == 'N')
+	if (data->map[(int)data->pl_y][(int)data->pl_x] == 'N')
 	{
 		data->planeX = 0.66;
 		data->planeY = 0;
 	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_y] == 'S')
+	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'S')
 	{
 		data->planeX = -0.66;
 		data->planeY = 0;
 	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_y] == 'E')
+	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'E')
 	{
 		data->planeX = 0;
 		data->planeY = 0.66;
 	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_y] == 'W')
+	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'W')
 	{
 		data->planeX = 0;
 		data->planeY = -0.66;
@@ -152,8 +152,6 @@ void	player_pos(char *line, t_data *data)
 			data->pl_x++;
 		}
 	}
-	data->pl_x += 0.5;
-	data->pl_y += 0.5;
 }
 
 t_data	init_map(int map, int x)
@@ -162,6 +160,24 @@ t_data	init_map(int map, int x)
 	int		y;
 
 	y = 0;
+	data.ray.stepX = 0;
+	data.ray.stepY = 0;
+	data.ray.hit = 0;
+	data.ray.side = 0;
+	data.ray.mapY = 0;
+	data.ray.mapX = 0;
+	data.ray.drawStart = 0;
+	data.ray.drawend = 0;
+	data.ray.lineHeight = 0;
+	data.ray.color = 0;
+	data.ray.cameraX = 0;
+	data.ray.raydirX = 0;
+	data.ray.raydirY = 0;
+	data.ray.sideDistX = 0;
+	data.ray.sideDistY = 0;
+	data.ray.deltaDistY = 0;
+	data.ray.deltaDistX = 0;
+	data.ray.perpWallDist = 0;
 	data.key.key_R = 0;
 	data.key.key_L = 0;
 	data.key.key_w = 0;
@@ -181,5 +197,7 @@ t_data	init_map(int map, int x)
 	player_pos(data.line, &data);
 	look_dir(&data);
 	look_plane(&data);
+	data.pl_x += 0.5;
+	data.pl_y += 0.5;
 	return (data);
 }
