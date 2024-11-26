@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/26 21:43:25 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/27 00:58:00 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,27 +130,28 @@ char	*recup_map(int fd)
 	return (free(buffer), line);
 }
 
-void	player_pos(char *line, t_data *data)
+void	player_pos(char **line, t_data *data)
 {
 	int	i;
-
+	int x;
+	
 	data->pl_x = 0;
 	data->pl_y = 0;
-	i = -1;
-	while (line[++i])
+	i = 0;
+	while (line[i])
 	{
-		if (line[i] == 'N' || line[i] == 'S'
-			|| line[i] == 'E' || line[i] == 'W')
-			break ;
-		else if (line[i] == '\n')
+		x = 0;
+		while (line[i][x])
 		{
-			data->pl_x = 0;
-			data->pl_y++;
+			if (line[i][x] == 'W' || line[i][x] == 'S' || line[i][x] == 'N' || line[i][x] == 'E')
+			{
+				data->pl_x = x;
+				data->pl_y = i;
+				return ;
+			}
+			x++;
 		}
-		else
-		{
-			data->pl_x++;
-		}
+		i++;
 	}
 }
 
@@ -187,14 +188,21 @@ t_data	init_map(int map, int x)
 	data.key.key_esc = 0;
 	data.ray.color = RGB_Blue;
 	data.line = recup_map(map);
-	data.map = ft_split(data.line, '\n');
+	data.map2 = ft_split(data.line, '\n');
+	if (pars_map(&data) == 0)
+		exit(1);
+	int i = 0;
+	while (data.map[i])
+	{
+		i++;
+	}
 	while (data.map[y][x])
 		x++;
 	data.map_x = x;
 	while (data.map[y])
 		y++;
 	data.map_y = y;
-	player_pos(data.line, &data);
+	player_pos(data.map, &data);
 	look_dir(&data);
 	look_plane(&data);
 	data.pl_x += 0.5;

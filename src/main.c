@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/26 21:44:18 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/27 00:54:38 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	key_move(t_data *data)
 
 void draw_point(t_data *data, int x, int y, long color)
 {
-int pixel;
+	int	pixel;
 
 	if (x >= 0 && x < 1920 && y >= 0 && y < 1080)
 	{
@@ -209,6 +209,9 @@ double	get_time(void)
 
 void	cube3d(t_data *data)
 {
+	data->img.width = 64;
+	data->img.height = 64;
+
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, 1920, 1080, "Cube3D");
 	data->img.img = mlx_new_image(data->mlx, 1920, 1080);
@@ -217,7 +220,13 @@ void	cube3d(t_data *data)
 			&data->img.endian);
 }
 
-int	main(int ac, char **av)
+int close_window(void *arg)
+{
+    (void)arg;
+    exit(0);
+}
+
+int main(int ac, char **av)
 {
 	t_data	data;
 	int		fd;
@@ -227,12 +236,10 @@ int	main(int ac, char **av)
 	if (pars(av, ac, fd) == 0)
 		return (0);
 	data = init_map(fd, 0);
-	if (pars_map(&data) == 0)
-		return (0);
-	// data.map[(int)(data.pl_y - 0.5)][(int)(data.pl_x - 0.5)] = '0';
 	cube3d(&data);
 	mlx_hook(data.win, 2, 1L << 0, &key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);
+	mlx_hook(data.win, 17, 0, close_window, NULL);
 	mlx_loop_hook(data.mlx, &loop, &data);
 	mlx_loop(data.mlx);
 }
