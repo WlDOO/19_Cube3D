@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 18:08:34 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/11/04 23:01:08 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/26 22:25:09 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ int	pars(char **av,int ac, int fd)
 
 int	pars_map(t_data *game)
 {
+	pars_map_text(game);
 	if (check_border2(game,0 ,0 ,0) == 0)
 		return (printf("Error\nMap invalid\n"), 0);
 	if (check_border(game, 0, 0) == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:50:19 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/10/22 15:58:29 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/26 22:37:38 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	raycasting(t_data *data, int x)
 {
 	data->ray.mapX = (int)data->pl_x;
 	data->ray.mapY = (int)data->pl_y;
+	printf("ply = <%d>\n", (int)data->pl_y);
 	data->ray.hit = 0;
 	data->ray.cameraX = (2 * (double)x / (double)1920 - 1);
 	data->ray.raydirX = data->dirX + data->planeX * data->ray.cameraX; //position X de la camera

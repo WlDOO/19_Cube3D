@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/07 16:40:50 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/26 22:12:21 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	key_move(t_data *data)
 
 void draw_point(t_data *data, int x, int y, long color)
 {
-int pixel;
+	int	pixel;
 
 	if (x >= 0 && x < 1920 && y >= 0 && y < 1080)
 	{
@@ -144,7 +144,7 @@ int	loop(t_data	*data)
 				draw_point(data, x, y, color);
 			}
 			else
-				draw_point(data, x, y, data->ray.color);
+				draw_point(data, x, y,data->ray.color);
 			y++;
 		}
 		x++;
@@ -208,12 +208,48 @@ double get_time(void)
 	return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
 }
 
+// void	recup_xpm(t_data *data, t_recup *recup)
+// {
+// 	if (!(recup->texture[0].img = mlx_xpm_file_to_image(recup->data.mlx,
+// 			recup->so, &(recup->texture[0].width), &(recup->texture[0].height))))
+// 		return ;
+// 	if (!(recup->texture[1].img = mlx_xpm_file_to_image(recup->data.mlx,
+// 			recup->no, &(recup->texture[1].width), &(recup->texture[1].height))))
+// 		return ;
+// 	if (!(recup->texture[2].img = mlx_xpm_file_to_image(recup->data.mlx,
+// 			recup->eo, &(recup->texture[2].width), &(recup->texture[2].height))))
+// 		return ;
+// 	if (!(recup->texture[3].img = mlx_xpm_file_to_image(recup->data.mlx,
+// 			recup->wo, &(recup->texture[3].width), &(recup->texture[3].height))))
+// 		return ;
+// 	recup->texture[0].addr = (int *)mlx_get_data_addr(recup->texture[0].img, &recup->texture[0].bits_per_pixel, &recup->texture[0].line_length, &recup->texture[0].endian);
+// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[0].addr[recup->texture[0].height * recup->texture[0].line_length / 4 + recup->texture[0].width];
+
+// 	recup->texture[1].addr = (int *)mlx_get_data_addr(recup->texture[1].img, &recup->texture[1].bits_per_pixel, &recup->texture[1].line_length, &recup->texture[1].endian);
+// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[1].addr[recup->texture[1].height * recup->texture[1].line_length / 4 + recup->texture[1].width];
+
+// 	recup->texture[2].addr = (int *)mlx_get_data_addr(recup->texture[2].img, &recup->texture[2].bits_per_pixel, &recup->texture[2].line_length, &recup->texture[2].endian);
+// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[2].addr[recup->texture[2].height * recup->texture[2].line_length / 4 + recup->texture[2].width];
+
+// 	recup->texture[3].addr = (int *)mlx_get_data_addr(recup->texture[3].img, &recup->texture[3].bits_per_pixel, &recup->texture[3].line_length, &recup->texture[3].endian);
+// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[3].addr[recup->texture[3].height * recup->texture[3].line_length / 4 + recup->texture[3].width];
+// }
+
 void cube3d(t_data *data)
 {
+	data->img.width = 64;
+	data->img.height = 64;
+
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, 1920, 1080, "Cube3D");
 	data->img.img = mlx_new_image(data->mlx, 1920, 1080);
 	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
+}
+
+int close_window(void *arg)
+{
+    (void)arg;
+    exit(0);
 }
 
 int main(int ac, char **av)
@@ -225,11 +261,10 @@ int main(int ac, char **av)
 	if (pars(av,ac,fd) == 0)
 		return (0);
 	data = init_map(fd);
-	if (pars_map(&data) == 0)
-		return (0);
 	cube3d(&data);
 	mlx_hook(data.win, 2, 1L << 0, &key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);
+	mlx_hook(data.win, 17, 0, close_window, NULL);
 	mlx_loop_hook(data.mlx, &loop, &data);
 	mlx_loop(data.mlx);
 }
