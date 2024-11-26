@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/25 12:31:56 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:26:20 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 #define RGB_Blue   0x0000FF  // Bleu
 #define RGB_White  0xFFFFFF  // Blanc
 #define RGB_Yellow 0xFFFF00  // Jaune
+#define test		0xBB00CC
 
 typedef	struct s_key
 {

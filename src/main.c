@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/25 14:21:59 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/25 17:52:14 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,16 @@ void	key_move(t_data *data)
 
 	if (data->key.key_w == 1)
 	{
+		// printf("%s\n\n\n", data->line);
+		// printf("map[%d][%d] = %c\n", (int)(data->pl_y + data->dirY * (0.1 + 0.01)), (int)data->pl_x, data->map[(int)(data->pl_y + data->dirY * (0.1 + 0.01))][(int)data->pl_x]);
 		if (data->map[(int)(data->pl_y + data->dirY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+		{
 			data->pl_y += data->dirY * 0.1;
+		}
 		if (data->map[(int)data->pl_y][(int)(data->pl_x + data->dirX * (0.1 + 0.01))] != '1')
+		{
 			data->pl_x += data->dirX * 0.1;
+		}
 	}
 	else if (data->key.key_s == 1)
 	{		
@@ -46,6 +52,7 @@ void	key_move(t_data *data)
 	}
 	else if (data->key.key_L)
 	{
+		printf("LAAAAAA\n");
 		angle = -0.03;
 		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
 		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
@@ -58,6 +65,7 @@ void	key_move(t_data *data)
 	}
 	else if (data->key.key_R)
 	{
+		printf("%f %f\n", data->pl_x, data->pl_y);
 		angle = 0.03;
 		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
 		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
@@ -130,7 +138,16 @@ int	loop(t_data	*data)
 				draw_point(data, x, y, color);
 			}
 			else
-				draw_point(data, x, y, data->ray.color);
+			{
+				if (y > 540)
+					draw_point(data, x, y, data->ray.color);
+				else
+				{
+					int color = test;
+					draw_point(data, x, y, color);
+				}
+				
+			}
 			y++;
 		}
 		x++;
@@ -216,6 +233,7 @@ int	main(int ac, char **av)
 	data = init_map(fd, 0);
 	if (pars_map(&data) == 0)
 		return (0);
+	// data.map[(int)(data.pl_y - 0.5)][(int)(data.pl_x - 0.5)] = '0';
 	cube3d(&data);
 	mlx_hook(data.win, 2, 1L << 0, &key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);
