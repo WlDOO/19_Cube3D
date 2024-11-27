@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
+/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 03:43:15 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/27 11:33:37 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,53 +14,43 @@
 
 void	key_move(t_data *data)
 {
+	double	angle;
+
 	if (data->key.key_w == 1)
 	{
-		data->new_pl_x = data->pl_x + data->dirX * 0.1;
-		data->new_pl_y = data->pl_y + data->dirY * 0.1;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
+		if (data->map[(int)(data->pl_y + data->dirY * (0.1 + 0.01))][(int)data->pl_x] != '1')
 		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
+			data->pl_y += data->dirY * 0.1;
+		}
+		if (data->map[(int)data->pl_y][(int)(data->pl_x + data->dirX * (0.1 + 0.01))] != '1')
+		{
+			data->pl_x += data->dirX * 0.1;
 		}
 	}
 	else if (data->key.key_s == 1)
 	{		
-		data->new_pl_x = data->pl_x - data->dirX * 0.1;
-		data->new_pl_y = data->pl_y - data->dirY * 0.1;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
-		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
-		}
+		if (data->map[(int)(data->pl_y - data->dirY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+			data->pl_y -= data->dirY * 0.1;
+		if (data->map[(int)data->pl_y][(int)(data->pl_x + data->dirX * (0.1 + 0.01))] != '1')
+			data->pl_x -= data->dirX * 0.1;
 	}
 	else if (data->key.key_d == 1)
 	{
-		data->newdirX = data->dirX * cos(PI / 2) - data->dirY * sin(PI / 2);
-		data->newdirY = data->dirX * sin(PI / 2) + data->dirY * cos(PI / 2);
-		data->new_pl_x = data->pl_x + data->newdirX * 0.07;
-		data->new_pl_y = data->pl_y + data->newdirY * 0.07;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
-		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
-		}
+    if (data->map[(int)(data->pl_y + data->planeY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+        data->pl_y += data->planeY * 0.1;
+    if (data->map[(int)data->pl_y][(int)(data->pl_x + data->planeX * (0.1 + 0.01))] != '1')
+        data->pl_x += data->planeX * 0.1;
 	}
 	else if (data->key.key_a == 1)
 	{
-		data->newdirX = data->dirX * cos(PI / 2) - data->dirY * sin(PI / 2);
-		data->newdirY = data->dirX * sin(PI / 2) + data->dirY * cos(PI / 2);
-		data->new_pl_x = data->pl_x - data->newdirX * 0.07;
-		data->new_pl_y = data->pl_y - data->newdirY * 0.07;
-		if (data->map[(int)data->new_pl_y][(int)data->new_pl_x] != '1')
-		{
-			data->pl_x = data->new_pl_x;
-			data->pl_y = data->new_pl_y;
-		}
+    if (data->map[(int)(data->pl_y - data->planeY * (0.1 + 0.01))][(int)data->pl_x] != '1')
+        data->pl_y -= data->planeY * 0.1;
+    if (data->map[(int)data->pl_y][(int)(data->pl_x - data->planeX * (0.1 + 0.01))] != '1')
+        data->pl_x -= data->planeX * 0.1;
 	}
 	else if (data->key.key_L)
 	{
-		double angle = -0.03;
+		angle = -0.03;
 		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
 		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
 		data->new_planeX = data->planeX * cos(angle) - data->planeY * sin(angle);
@@ -72,7 +62,7 @@ void	key_move(t_data *data)
 	}
 	else if (data->key.key_R)
 	{
-		double angle = 0.03;
+		angle = 0.03;
 		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
 		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
 		data->new_planeX = data->planeX * cos(angle) - data->planeY * sin(angle);
@@ -97,17 +87,17 @@ void draw_point(t_data *data, int x, int y, long color)
 					/ 8));
 		if (data->img.endian == 0)
 		{
-			data->img.addr[pixel + 0] = (color & 255);
-			data->img.addr[pixel + 1] = (color >> 8) & 255;
-			data->img.addr[pixel + 2] = (color >> 16) & 255;
-			data->img.addr[pixel + 3] = (color >> 24) & 255;
+			data->img.addr[pixel + 0] = (color & 0xFF);
+			data->img.addr[pixel + 1] = (color >> 8) & 0xFF;
+			data->img.addr[pixel + 2] = (color >> 16) & 0xFF;
+			data->img.addr[pixel + 3] = (color >> 24) & 0xFF;
 		}
 		else
 		{
-			data->img.addr[pixel + 0] = (color >> 24) & 255;
-			data->img.addr[pixel + 1] = (color >> 16) & 255;
-			data->img.addr[pixel + 2] = (color >> 8) & 255;
-			data->img.addr[pixel + 3] = (color & 255);
+			data->img.addr[pixel + 0] = (color >> 24) & 0xFF;
+			data->img.addr[pixel + 1] = (color >> 16) & 0xFF;
+			data->img.addr[pixel + 2] = (color >> 8) & 0xFF;
+			data->img.addr[pixel + 3] = (color & 0xFF);
 		}
 	}
 }
@@ -130,11 +120,12 @@ int	loop(t_data	*data)
 		int	y = 0;
 		while (y < 1080)
 		{
+		
 			if (y >= data->ray.drawStart && y <= data->ray.drawend)
 			{
 				int color = RGB_Red;
 				if (data->ray.side == 0)
-					color = RGB_Red;
+					color = data->recup.texture[0].addr[y * data->recup.texture[0].line_length / 4 + x];
 				else if (data->ray.side == 1)
 					color = RGB_Green;
 				if (data->ray.side == 2)
@@ -144,7 +135,15 @@ int	loop(t_data	*data)
 				draw_point(data, x, y, color);
 			}
 			else
-				draw_point(data, x, y,data->ray.color);
+			{
+				if (y > 540)
+					draw_point(data, x, y, data->recup.color_plafon);
+				else
+				{
+					draw_point(data, x, y, data->recup.color_sol);
+				}
+				
+			}
 			y++;
 		}
 		x++;
@@ -192,60 +191,37 @@ int	key_release(int keycode, t_data *data)
 	return (0);
 }
 
-void my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	char *dst;
+	char	*dst;
 
 	dst = data->img.addr + (y * 1080 + x * (data->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
-double get_time(void)
+double	get_time(void)
 {
-	struct timeval current_time;
+	struct timeval	current_time;
 
 	gettimeofday(&current_time, NULL);
 	return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
 }
 
-// void	recup_xpm(t_data *data, t_recup *recup)
-// {
-// 	if (!(recup->texture[0].img = mlx_xpm_file_to_image(recup->data.mlx,
-// 			recup->so, &(recup->texture[0].width), &(recup->texture[0].height))))
-// 		return ;
-// 	if (!(recup->texture[1].img = mlx_xpm_file_to_image(recup->data.mlx,
-// 			recup->no, &(recup->texture[1].width), &(recup->texture[1].height))))
-// 		return ;
-// 	if (!(recup->texture[2].img = mlx_xpm_file_to_image(recup->data.mlx,
-// 			recup->eo, &(recup->texture[2].width), &(recup->texture[2].height))))
-// 		return ;
-// 	if (!(recup->texture[3].img = mlx_xpm_file_to_image(recup->data.mlx,
-// 			recup->wo, &(recup->texture[3].width), &(recup->texture[3].height))))
-// 		return ;
-// 	recup->texture[0].addr = (int *)mlx_get_data_addr(recup->texture[0].img, &recup->texture[0].bits_per_pixel, &recup->texture[0].line_length, &recup->texture[0].endian);
-// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[0].addr[recup->texture[0].height * recup->texture[0].line_length / 4 + recup->texture[0].width];
-
-// 	recup->texture[1].addr = (int *)mlx_get_data_addr(recup->texture[1].img, &recup->texture[1].bits_per_pixel, &recup->texture[1].line_length, &recup->texture[1].endian);
-// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[1].addr[recup->texture[1].height * recup->texture[1].line_length / 4 + recup->texture[1].width];
-
-// 	recup->texture[2].addr = (int *)mlx_get_data_addr(recup->texture[2].img, &recup->texture[2].bits_per_pixel, &recup->texture[2].line_length, &recup->texture[2].endian);
-// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[2].addr[recup->texture[2].height * recup->texture[2].line_length / 4 + recup->texture[2].width];
-
-// 	recup->texture[3].addr = (int *)mlx_get_data_addr(recup->texture[3].img, &recup->texture[3].bits_per_pixel, &recup->texture[3].line_length, &recup->texture[3].endian);
-// 	data->addr[data->map_y * recup->data.line_length / 4 + data->map_x] = recup->texture[3].addr[recup->texture[3].height * recup->texture[3].line_length / 4 + recup->texture[3].width];
-// }
-
-void cube3d(t_data *data)
+void	cube3d(t_data *data)
 {
 	data->img.width = 64;
 	data->img.height = 64;
-
+	data->recup.texture[0].width = 64;
+	data->recup.texture[0].height = 64;
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, 1920, 1080, "Cube3D");
 	data->img.img = mlx_new_image(data->mlx, 1920, 1080);
-	data->img.addr = mlx_get_data_addr(data->img.img, &data->img.bits_per_pixel, &data->img.line_length, &data->img.endian);
+	data->img.addr = mlx_get_data_addr(data->img.img,
+			&data->img.bits_per_pixel, &data->img.line_length,
+			&data->img.endian);
+	data->recup.texture[0].img = mlx_xpm_file_to_image(data->mlx,data->recup.no, &(data->recup.texture[0].width), &(data->recup.texture[0].height));
+	data->recup.texture[0].addr = mlx_get_data_addr(data->recup.texture[0].img, &data->recup.texture[0].bits_per_pixel, &data->recup.texture[0].line_length, &data->recup.texture[0].endian);
 }
-
 int close_window(void *arg)
 {
     (void)arg;
@@ -254,17 +230,35 @@ int close_window(void *arg)
 
 int main(int ac, char **av)
 {
-	t_data data;
-	int fd;
+	t_data	data;
+	int		fd;
+
 	(void)ac;
 	fd = open(av[1], O_RDONLY);
-	if (pars(av,ac,fd) == 0)
+	if (pars(av, ac, fd) == 0)
 		return (0);
-	data = init_map(fd);
+	data = init_map(fd, 0);
 	cube3d(&data);
 	mlx_hook(data.win, 2, 1L << 0, &key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);
 	mlx_hook(data.win, 17, 0, close_window, NULL);
 	mlx_loop_hook(data.mlx, &loop, &data);
 	mlx_loop(data.mlx);
+	// (void)av;
+	// (void)ac;
+	// char *str;
+
+	// str = NULL;
+	// str = ft_puthex(15, str);
+	// if (ft_strlen(str) == 1)
+	// {
+	// 	char *tmp;
+	// 	tmp = malloc(sizeof(char) * 3);
+	// 	tmp[0] = '0';
+	// 	tmp[1] = str[0];
+	// 	tmp[2] = '\0';
+	// 	free(str);
+	// 	str = tmp;
+	// }
+	// printf("%s\n", str);
 }

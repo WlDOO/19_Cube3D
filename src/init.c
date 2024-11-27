@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
+/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/26 22:44:51 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/27 00:58:00 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,37 +134,51 @@ void	player_pos(char **line, t_data *data)
 {
 	int	i;
 	int x;
+	
 	data->pl_x = 0;
 	data->pl_y = 0;
-	printf("data <%s>\n", data->line);
-	i = -1;
-	x = -1;
-	while (line[++i])
+	i = 0;
+	while (line[i])
 	{
-		while(line[i][++x])
+		x = 0;
+		while (line[i][x])
 		{
-			if (line[i][x] == 'N' || line[i][x] == 'S' || line[i][x] == 'E' || line[i][x] == 'W')
-				break;
-			else
+			if (line[i][x] == 'W' || line[i][x] == 'S' || line[i][x] == 'N' || line[i][x] == 'E')
 			{
-				data->pl_x++;
+				data->pl_x = x;
+				data->pl_y = i;
+				return ;
 			}
+			x++;
 		}
-		data->pl_x = -1;
-		data->pl_y++;
+		i++;
 	}
-	data->pl_x += 0.5;
-	data->pl_y += 0.5;
 }
 
-t_data	init_map(int map)
+t_data	init_map(int map, int x)
 {
 	t_data	data;
-	int		x;
 	int		y;
 
-	x = 0;
 	y = 0;
+	data.ray.stepX = 0;
+	data.ray.stepY = 0;
+	data.ray.hit = 0;
+	data.ray.side = 0;
+	data.ray.mapY = 0;
+	data.ray.mapX = 0;
+	data.ray.drawStart = 0;
+	data.ray.drawend = 0;
+	data.ray.lineHeight = 0;
+	data.ray.color = 0;
+	data.ray.cameraX = 0;
+	data.ray.raydirX = 0;
+	data.ray.raydirY = 0;
+	data.ray.sideDistX = 0;
+	data.ray.sideDistY = 0;
+	data.ray.deltaDistY = 0;
+	data.ray.deltaDistX = 0;
+	data.ray.perpWallDist = 0;
 	data.key.key_R = 0;
 	data.key.key_L = 0;
 	data.key.key_w = 0;
@@ -173,8 +187,6 @@ t_data	init_map(int map)
 	data.key.key_d = 0;
 	data.key.key_esc = 0;
 	data.ray.color = RGB_Blue;
-	// data.planeX = 0.66;	 
-	// data.planeY = 0;
 	data.line = recup_map(map);
 	data.map2 = ft_split(data.line, '\n');
 	if (pars_map(&data) == 0)
@@ -182,7 +194,6 @@ t_data	init_map(int map)
 	int i = 0;
 	while (data.map[i])
 	{
-		printf ("<%s>\n", data.map[i]);
 		i++;
 	}
 	while (data.map[y][x])
@@ -194,5 +205,7 @@ t_data	init_map(int map)
 	player_pos(data.map, &data);
 	look_dir(&data);
 	look_plane(&data);
+	data.pl_x += 0.5;
+	data.pl_y += 0.5;
 	return (data);
 }
