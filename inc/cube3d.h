@@ -6,19 +6,19 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 00:54:33 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/27 03:46:21 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUBE3D_H
 # define CUBE3D_H
 
-# include <fcntl.h>
-# include <math.h>
+# include <sys/time.h>
 # include <mlx.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <sys/time.h>
+# include <math.h>
 # include <unistd.h>
 
 //-lmlx -framework OpenGL -framework Appkit
@@ -60,107 +60,82 @@ typedef	struct s_key
 	int	key_esc;
 }				t_key;
 
-typedef struct s_raycasting
-{
-	int				stepX;
-	int				stepY;
-	int				hit;
-	int				side;
-	int				mapY;
-	int				mapX;
-	int				drawStart;
-	int				drawend;
-	int				lineHeight;
-	int				color;
-	double			cameraX;
-	double			raydirX;
-	double			raydirY;
-	double			sideDistX;
-	double			sideDistY;
-	double			deltaDistY;
-	double			deltaDistX;
-	double			perpWallDist;
-}					t_raycasting;
 
-typedef struct s_img
+typedef struct	s_raycasting
 {
-	void			*img;
-	char			*addr;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
-	int				width;
-	int				height;
-}					t_img;
+	int		stepX;
+	int		stepY;
+	int		hit;
+	int		side;
+	int		mapY;
+	int		mapX;
+	int		drawStart;
+	int		drawend;
+	int		lineHeight;
+	int		color;
+	double	cameraX;
+	double	raydirX;
+	double	raydirY;
+	double	sideDistX;
+	double	sideDistY;
+	double	deltaDistY;
+	double	deltaDistX;
+	double	perpWallDist;
+}			t_raycasting;
 
+typedef	struct s_img
+{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}				t_img;
 
 typedef struct s_data
 {
-	char			**map;
-	char			**map2;
-	char			**map_attr;
-	char			*line;
-	int				map_x;
-	int				map_y;
-	double			new_pl_x;
-	double			new_pl_y;
-	double			pl_x;
-	double			pl_y;
-	void			*mlx;
-	void			*win;
-	double			dirX;
-	double			dirY;
-	double			newdirY;
-	double			newdirX;
-	double			planeX;
-	double			planeY;
-	double			new_planeX;
-	double			new_planeY;
-	t_img			img;
+	char		**map;
+	char		*line;
+	int			map_x;
+	int			map_y;
+	double		new_pl_x;
+	double		new_pl_y;
+	double		pl_x;
+	double		pl_y;
+	void		*mlx;
+	void		*win;
+	double		dirX;
+	double		dirY;
+	double		newdirY;
+	double		newdirX;
+	double		planeX;
+	double		planeY;
+	double		new_planeX;
+	double		new_planeY;
+	t_img		img;
 	t_raycasting	ray;
 	t_key			key;
-}					t_data;
+}				t_data;
 
-typedef struct s_texture
-{
-	void			*img;
-	char			*addr;
-	int				width;
-	int				height;
-}				t_texture;
-
-typedef struct s_recup
-{
-	t_data		data;
-	t_texture	texture[4];
-	char	*so;
-	char	*no;
-	char	*eo;
-	char	*wo;	
-}				t_recup;
-
-char		**ft_split(char const *s, char c);
-t_data		init_map(int map, int x);
+char	**ft_split(char const *s, char c);
+t_data	init_map(int map, int x);
 
 /*----Raycasting----*/
-void				raycasting(t_data *data, int x);
-void				raycasting_suite(t_data *data);
-void				ray_while_hit(t_data *data);
+void	raycasting(t_data *data, int x);
+void	raycasting_suite(t_data *data);
+void	ray_while_hit(t_data *data);
 /*------------------*/
 
 /*----Parsing----*/
-int					pars(char **av, int ac, int fd);
-int					pars_map(t_data *game);
+int	pars(char **av,int ac, int fd);
+int	pars_map(t_data *game);
 
-int					check_border(t_data *game, int i, int j);
-int					check_border2(t_data *game, int j, int i, int start);
-int					check_border_last(t_data *game);
-int					check_border_first(t_data *game);
-int					check_border_mid(t_data *game);
-int					check_map(t_data *game);
-
-void				pars_map_text(t_data *game);
-char				*ft_strdup(char *s1);
+int	check_border(t_data *game, int i, int j);
+int	check_border2(t_data *game, int j, int i, int start);
+int	check_border_last(t_data *game);
+int	check_border_first(t_data *game);
+int	check_border_mid(t_data *game);
+int	check_map(t_data *game);
 /*------------------*/
 
 #endif

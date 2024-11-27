@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 01:00:14 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/27 03:44:56 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,17 +87,17 @@ void draw_point(t_data *data, int x, int y, long color)
 					/ 8));
 		if (data->img.endian == 0)
 		{
-			data->img.addr[pixel + 0] = (color & 0xFF);
-			data->img.addr[pixel + 1] = (color >> 8) & 0xFF;
-			data->img.addr[pixel + 2] = (color >> 16) & 0xFF;
-			data->img.addr[pixel + 3] = (color >> 24) & 0xFF;
+			data->img.addr[pixel + 0] = (color & 100);
+			data->img.addr[pixel + 1] = (color >> 8) & 100;
+			data->img.addr[pixel + 2] = (color >> 16) & 100;
+			data->img.addr[pixel + 3] = (color >> 24) & 100;
 		}
 		else
 		{
-			data->img.addr[pixel + 0] = (color >> 24) & 0xFF;
-			data->img.addr[pixel + 1] = (color >> 16) & 0xFF;
-			data->img.addr[pixel + 2] = (color >> 8) & 0xFF;
-			data->img.addr[pixel + 3] = (color & 0xFF);
+			data->img.addr[pixel + 0] = (color >> 24) & 100;
+			data->img.addr[pixel + 1] = (color >> 16) & 100;
+			data->img.addr[pixel + 2] = (color >> 8) & 100;
+			data->img.addr[pixel + 3] = (color & 100);
 		}
 	}
 }

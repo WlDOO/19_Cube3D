@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
+/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 19:53:21 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/11/26 22:34:37 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/27 01:02:04 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,12 @@ void	pars_map_text(t_data *game)
 			while (game->map2[i] && (game->map2[i][0] == '1' || game->map2[i][0] == '0' || game->map2[i][0] == ' '))
 			{
 				game->map[k] = ft_strdup(game->map2[i]);
-				printf("deux ; <%s>\n", game->map[k]);
 				k++;
 				i++;
 			}
 			game->map[k] = NULL;
-			printf("deux ; <%s>\n", game->map[k]);
 			while (game->map2[i])
 			{
-				printf("premierrrr ; <%s>\n", game->map2[i]);
 				i++;
 			}
 		}
@@ -48,7 +45,6 @@ void	pars_map_text(t_data *game)
 		{
 			while (game->map2[i] && game->map2[i][0] != '1' && game->map2[i][0] != '0' && game->map2[i][0] != ' ')
 			{
-				printf("premierrrr ; <%s>\n", game->map2[i]);
 				i++;
 			}
 			while (game->map2[i + k] && (game->map2[i + k][0] == '1' || game->map2[i + k][0] == '0' || game->map2[i + k][0] == ' '))
@@ -58,15 +54,12 @@ void	pars_map_text(t_data *game)
 			while (game->map2[i] && (game->map2[i][0] == '1' || game->map2[i][0] == '0' || game->map2[i][0] == ' '))
 			{
 				game->map[k] = ft_strdup(game->map2[i]);
-				printf("deux ; <%s>\n", game->map[k]);
 				k++;
 				i++;
 			}
 			game->map[k] = NULL;
-			printf("deux ; <%s>\n", game->map[k]);
 			while (game->map2[i])
 			{
-				printf("premierrrr ; <%s>\n", game->map2[i]);
 				i++;
 			}
 		}

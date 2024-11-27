@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:50:19 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 00:58:04 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/27 04:05:49 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,28 @@ void	ray_while_hit(t_data *data)
 	data->ray.drawStart = -1 * data->ray.lineHeight / 2 + 1080 / 2;
 	if (data->ray.drawStart < 0)
 		data->ray.drawStart = 0;
+}
+
+/*a code to do a strdup but with a size*/
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
+{
+	size_t	i;
+	size_t	j;	
+
+	i = 0;
+	j = 0;
+	if (needle[i] == '\0')
+		return ((char *)haystack);
+	while (haystack[i] != '\0' && i < len)
+	{
+		while (haystack[i + j] == needle[j] && haystack[i + j] != '\0')
+		{
+			if (needle[j + 1] == '\0')
+				return ((char *)haystack + i);
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+	return (NULL);
 }
