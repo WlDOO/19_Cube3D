@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 18:08:34 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/11/26 22:25:09 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/27 01:17:55 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,32 @@ int	f_f(char *str, char c, int t)
 				return (1);
 		return (0);
 	}
+}
+
+char	*ft_strndup(char *s1, int n)
+{
+	int		i;
+	int		len;
+	char	*dest;
+
+	i = 0;
+	len = 0;
+	while (len < n && s1[len])
+		len++;
+	dest = malloc(sizeof(char) * (len + 1));
+	if (!dest || !s1)
+	{
+		f_f(dest, '1', 1);
+		f_f(s1, '1', 1);
+		return (NULL);
+	}
+	while (i < n && s1[i])
+	{
+		dest[i] = s1[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
 
 char	*ft_strdup(char *s1)

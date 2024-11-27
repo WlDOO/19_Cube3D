@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/24 22:01:57 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/27 01:18:10 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,15 @@ typedef struct s_img
 	int				height;
 }					t_img;
 
+typedef struct s_recup
+{
+	char	*so;
+	char	*no;
+	char	*eo;
+	char	*wo;
+	char	**f;
+	char	**c;	
+}				t_recup;
 
 typedef struct s_data
 {
@@ -118,6 +127,7 @@ typedef struct s_data
 	t_img			img;
 	t_raycasting	ray;
 	t_key			key;
+	t_recup			recup;
 }					t_data;
 
 typedef struct s_texture
@@ -128,15 +138,6 @@ typedef struct s_texture
 	int				height;
 }				t_texture;
 
-typedef struct s_recup
-{
-	t_data		data;
-	t_texture	texture[4];
-	char	*so;
-	char	*no;
-	char	*eo;
-	char	*wo;	
-}				t_recup;
 
 char				**ft_split(char const *s, char c);
 t_data				init_map(int map);
@@ -160,6 +161,8 @@ int					check_map(t_data *game);
 
 void				pars_map_text(t_data *game);
 char				*ft_strdup(char *s1);
+int					ft_strcmp(char *s1, char *s2);
+char				*ft_strndup(char *s1, int n);
 /*------------------*/
 
 #endif
