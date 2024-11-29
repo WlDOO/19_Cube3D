@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 13:50:19 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 08:07:03 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/28 19:44:46 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	raycasting(t_data *data, int x)
 	data->ray.mapX = (int)data->pl_x;
 	data->ray.mapY = (int)data->pl_y;
 	data->ray.hit = 0;
-	data->ray.cameraX = (2 * (double)x / (double)1920 - 1);
+	data->ray.cameraX = (2 * (double)x / (double)WIDTH - 1);
 	data->ray.raydirX = data->dirX + data->planeX * data->ray.cameraX;
 	data->ray.raydirY = data->dirY + data->planeY * data->ray.cameraX;
 	if (data->ray.raydirX == 0)
@@ -66,23 +66,17 @@ void	ray_while_hit(t_data *data)
 		{
 			data->ray.sideDistX += data->ray.deltaDistX;
 			data->ray.mapX += data->ray.stepX;
-			data->ray.side = 0;
+			data->ray.side = W;
 			if (data->ray.raydirX > 0)
-				data->ray.side = 1;
-			data->ray.WallX = data->ray.mapY + data->ray.perpWallDist * data->ray.raydirY;
-			data->ray.texX = data->ray.WallX * TEXWIDTH;
-			data->ray.texX = TEXWIDTH - data->ray.texX - 1;
+				data->ray.side = E;
 		}
 		else
 		{
 			data->ray.sideDistY += data->ray.deltaDistY;
 			data->ray.mapY += data->ray.stepY;
-			data->ray.side = 2;
+			data->ray.side = N;
 			if (data->ray.raydirY > 0)
-				data->ray.side = 3;
-			data->ray.WallY = data->ray.mapX + data->ray.perpWallDist * data->ray.raydirX;
-			data->ray.texX = data->ray.WallX * TEXWIDTH;
-			data->ray.texX = TEXWIDTH - data->ray.texX - 1;
+				data->ray.side = S;
 		}
 		if (data->map[data->ray.mapY][data->ray.mapX] == '1')
 			data->ray.hit = 1;
@@ -91,13 +85,8 @@ void	ray_while_hit(t_data *data)
 		data->ray.perpWallDist = data->ray.sideDistX - data->ray.deltaDistX;
 	else
 		data->ray.perpWallDist = data->ray.sideDistY - data->ray.deltaDistY;
-	data->ray.lineHeight = 1080 / data->ray.perpWallDist;
-	data->ray.drawStart = -1 * data->ray.lineHeight / 2 + 1080 / 2;
-	if (data->ray.drawStart < 0)
-		data->ray.drawStart = 0;
 }
 
-/*a code to do a strdup but with a size*/
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
 	size_t	i;

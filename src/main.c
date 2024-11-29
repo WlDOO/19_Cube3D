@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 11:33:37 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:02:41 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void draw_point(t_data *data, int x, int y, long color)
 {
 	int	pixel;
 
-	if (x >= 0 && x < 1920 && y >= 0 && y < 1080)
+	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 	{
 		pixel = (y * data->img.line_length) + (x * (data->img.bits_per_pixel
 					/ 8));
@@ -113,39 +113,44 @@ int	loop(t_data	*data)
 		raycasting(data, x);
 		raycasting_suite(data);
 		ray_while_hit(data);
-		data->ray.drawend = data->ray.lineHeight / 2 + 1080 / 2;
-		if (data->ray.drawend >= 1080)
-			data->ray.drawend = 1080 - 1;
-		//choose wall color
-		int	y = 0;
-		while (y < 1080)
-		{
-		
-			if (y >= data->ray.drawStart && y <= data->ray.drawend)
-			{
-				int color = RGB_Red;
-				if (data->ray.side == 0)
-					color = data->recup.texture[0].addr[y * data->recup.texture[0].line_length / 4 + x];
-				else if (data->ray.side == 1)
-					color = RGB_Green;
-				if (data->ray.side == 2)
-					color = RGB_White;
-				else if  (data->ray.side == 3)
-					color = RGB_Yellow;
-				draw_point(data, x, y, color);
-			}
-			else
-			{
-				if (y > 540)
-					draw_point(data, x, y, data->recup.color_plafon);
-				else
-				{
-					draw_point(data, x, y, data->recup.color_sol);
-				}
+		data->ray.lineHeight = HEIGHT / data->ray.perpWallDist;
+		data->ray.drawStart = -1 * data->ray.lineHeight / 2 + HEIGHT / 2;
+		if (data->ray.drawStart < 0)
+			data->ray.drawStart = 0;
+		data->ray.drawend = data->ray.lineHeight / 2 + HEIGHT / 2;
+		if (data->ray.drawend >= HEIGHT)
+			data->ray.drawend = HEIGHT - 1;
+		// int	y = 0;
+		// while (y < 1080)
+		// {
+		// 	if (y >= data->ray.drawStart && y <= data->ray.drawend)
+		// 	{
+		// 		int color = RGB_Red;
+		// 		if (data->ray.side == 0)
+		// 			color = RGB_Red;
+		// 		else if (data->ray.side == 1)
+		// 			color = RGB_Green;
+		// 		if (data->ray.side == 2)
+		// 			color = RGB_White;
+		// 		else if  (data->ray.side == 3)
+		// 			color = RGB_Yellow;
+		// 		draw_point(data, x, y, color);
+		// 	}
+		// 	else
+		// 	{
+		// 		if (y > 540)
+		// 			draw_point(data, x, y, data->ray.color);
+		// 		else
+		// 		{
+		// 			int color = test;
+		// 			draw_point(data, x, y, color);
+		// 		}
 				
-			}
-			y++;
-		}
+		// 	}
+		// 	y++;
+		// }
+		draw_floor(data, x);
+		draw_all(data, x);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img.img, 0, 0);
@@ -195,7 +200,7 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->img.addr + (y * 1080 + x * (data->img.bits_per_pixel / 8));
+	dst = data->img.addr + (y * HEIGHT + x * (data->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
@@ -214,13 +219,11 @@ void	cube3d(t_data *data)
 	data->recup.texture[0].width = 64;
 	data->recup.texture[0].height = 64;
 	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, 1920, 1080, "Cube3D");
-	data->img.img = mlx_new_image(data->mlx, 1920, 1080);
+	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cube3D");
+	data->img.img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
 	data->img.addr = mlx_get_data_addr(data->img.img,
 			&data->img.bits_per_pixel, &data->img.line_length,
 			&data->img.endian);
-	data->recup.texture[0].img = mlx_xpm_file_to_image(data->mlx,data->recup.no, &(data->recup.texture[0].width), &(data->recup.texture[0].height));
-	data->recup.texture[0].addr = mlx_get_data_addr(data->recup.texture[0].img, &data->recup.texture[0].bits_per_pixel, &data->recup.texture[0].line_length, &data->recup.texture[0].endian);
 }
 int close_window(void *arg)
 {
@@ -239,6 +242,7 @@ int main(int ac, char **av)
 		return (0);
 	data = init_map(fd, 0);
 	cube3d(&data);
+	init_xpm(&data);
 	mlx_hook(data.win, 2, 1L << 0, &key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);
 	mlx_hook(data.win, 17, 0, close_window, NULL);

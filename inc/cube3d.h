@@ -6,7 +6,7 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 11:26:38 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/28 19:48:53 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,12 @@
 #define test		0xBB00CC
 #define TEXWIDTH 128
 #define TEXHEIGHT 128
+#define WIDTH	1920
+#define	HEIGHT	1080
+#define E 1
+#define W 0
+#define S 2
+#define N 3
 
 typedef	struct s_key
 {
@@ -83,11 +89,16 @@ typedef struct	s_raycasting
 	double	deltaDistY;
 	double	deltaDistX;
 	double	perpWallDist;
-	double	WallX;
-	double	WallY;
+}			t_raycasting;
+
+typedef struct s_wall
+{
+	double	wall_cord;
+	double	step;
+	double	tex_pos;
 	int		texX;
 	int		texY;
-}			t_raycasting;
+}			t_wall;
 
 typedef	struct s_img
 {
@@ -101,83 +112,91 @@ typedef	struct s_img
 }				t_img;
 typedef struct s_texture
 {
-	void	*img;
-	char	*addr;
-	int 	height;
-	int 	width;
+	void	*img_ptr;
+	char	*img_pixels_ptr;
 	int		bits_per_pixel;
-	int		line_length;
 	int		endian;
+	int		size_line;
+	int		height;
+	int		width;
 }				t_texture;
 
 typedef struct s_recup
 {
-	char	*so;
-	char	*no;
-	char	*eo;
-	char	*wo;
-	char	**f;
-	char	**c;
-	int		color_sol;
-	int		color_plafon;
-	t_texture texture[3];
+	char 		*no;
+	char		*so;
+	char		*wo;
+	char		*eo;
+	char		**f;
+	char		**c;
+	int			tex_i;
+	int			color_sol;
+	int			color_plafon;
+	t_texture	texture[4];
 }				t_recup;
 
 typedef struct s_data
 {
-	char		**map;
-	char		**map2;
-	char		**map_attr;
-	char		*line;
-	int			map_x;
-	int			map_y;
-	double		new_pl_x;
-	double		new_pl_y;
-	double		pl_x;
-	double		pl_y;
-	void		*mlx;
-	void		*win;
-	double		dirX;
-	double		dirY;
-	double		newdirY;
-	double		newdirX;
-	double		planeX;
-	double		planeY;
-	double		new_planeX;
-	double		new_planeY;
-	t_img		img;
+	int				map_x;
+	int				map_y;
+	char			**map;
+	char			**map2;
+	char			**map_attr;
+	char			*line;
+	void			*win;
+	void			*mlx;
+	double			new_pl_x;
+	double			new_pl_y;
+	double			pl_x;
+	double			pl_y;
+	double			dirX;
+	double			dirY;
+	double			newdirY;
+	double			newdirX;
+	double			planeX;
+	double			planeY;
+	double			new_planeX;
+	double			new_planeY;
+	t_img			img;
 	t_raycasting	ray;
 	t_key			key;
 	t_recup			recup;
+	t_wall			wall;
 }				t_data;
 
 char	**ft_split(char const *s, char c);
 t_data	init_map(int map, int x);
+void	draw_wall(t_data *data, int i, int j);
+void	draw_all(t_data *data, int x);
+void	draw_floor(t_data *data, int x);
+void	init_xpm(t_data *data);
 
 /*----Raycasting----*/
 void	raycasting(t_data *data, int x);
 void	raycasting_suite(t_data *data);
+void 	draw_point(t_data *data, int x, int y, long color);
 void	ray_while_hit(t_data *data);
+void	side(t_data *data);
+
 /*------------------*/
 
 /*----Parsing----*/
-int	pars(char **av,int ac, int fd);
-int	pars_map(t_data *game);
-
-int	check_border(t_data *game, int i, int j);
-int	check_border2(t_data *game, int j, int i, int start);
-int	check_border_last(t_data *game);
-int	check_border_first(t_data *game);
-int	check_border_mid(t_data *game);
-int	check_map(t_data *game);
 char	*ft_strdup(char *s1);
 char	*ft_strndup(char *s1, int n);
 char	*ft_puthex(int nbr, char *str);
-void	pars_map_text(t_data *game);
-int		ft_strlen(char *str);
-int	ft_atoi(const char *str1);
 char	*ft_strjoin(char *s1, char *s2);
-int hexa_to_deci(char *hex) ;
+void	pars_map_text(t_data *game);
+int		pars(char **av,int ac, int fd);
+int		pars_map(t_data *game);
+int		check_border(t_data *game, int i, int j);
+int		check_border2(t_data *game, int j, int i, int start);
+int		check_border_last(t_data *game);
+int		check_border_first(t_data *game);
+int		check_border_mid(t_data *game);
+int		check_map(t_data *game);
+int		ft_strlen(char *str);
+int		ft_atoi(const char *str1);
+int		hexa_to_deci(char *hex) ;
 /*------------------*/
 
 #endif
