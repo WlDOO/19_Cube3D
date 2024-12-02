@@ -6,7 +6,7 @@
 #    By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 17:24:32 by najeuneh          #+#    #+#              #
-#    Updated: 2024/11/29 14:04:32 by najeuneh         ###   ########.fr        #
+#    Updated: 2024/11/29 17:14:45 by najeuneh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ NC=\033[0m
 CC = cc
 
 MY_SOURCES = src/main.c src/init.c src/ft_split.c src/raycasting/raycasting.c \
-				src/check_border.c src/parsing.c src/ft_error.c src/pars_map.c src/draw.c src/init2.c\
+			src/check_border.c src/parsing.c src/ft_error.c src/pars_map.c src/draw.c src/init2.c \
+			src/Move.c src/clean.c \
 
 CFLAGS = -Wall -Wextra -Werror -g -g3 -finline-functions -fvectorize -fslp-vectorize -ffast-math -falign-functions -funroll-loops -fstrict-aliasing \
 	 -fomit-frame-pointer -flto -Ofast -O1 -O2 -Os -O3

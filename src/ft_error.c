@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
+/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 22:23:33 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/11/26 22:12:00 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/11/29 15:57:21 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,16 @@ int	check_map(t_data *game)
 	count = 0;
 	while (game->map[i])
 	{
-		j = 0;
-		while (game->map[i][j] != '\n' && game->map[i][j] != '\0')
+		j = -1;
+		while (game->map[i][++j] != '\n' && game->map[i][j] != '\0')
 		{
 			if (game->map[i][j] == 'N' || game->map[i][j] == 'S')
 				count++;
 			else if (game->map[i][j] == 'E' || game->map[i][j] == 'W')
 				count++;
 			else if (game->map[i][j] != '1' && game->map[i][j] != '0')
-			{
 				if (game->map[i][j] != 32 && game->map[i][j] != '\t')
 					return (0);
-			}
-			j++;
 		}
 		i++;
 	}
@@ -43,4 +40,3 @@ int	check_map(t_data *game)
 		return (0);
 	return (1);
 }
-

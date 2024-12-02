@@ -1,12 +1,14 @@
-1111111
-1S00001
-1000001
-1111111
+111111111
+100000001
+10000E001
+100000001
+100000001
+111111111
 
-NO ./texture/wood.xpm
-SO ./texture/grass.xpm
-WE ./texture/roof.xpm
-EA ./texture/wood.xpm
+NO ./texture/bluestone.xpm
+SO ./texture/colorstone.xpm
+WE ./texture/eagle.xpm
+EA ./texture/mossy.xpm
 
-F 5,5,0
+F 255,255,255
 C 65,23,10

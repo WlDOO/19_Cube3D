@@ -6,149 +6,31 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/29 14:02:41 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:13:46 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cube3d.h"
 
-void	key_move(t_data *data)
-{
-	double	angle;
-
-	if (data->key.key_w == 1)
-	{
-		if (data->map[(int)(data->pl_y + data->dirY * (0.1 + 0.01))][(int)data->pl_x] != '1')
-		{
-			data->pl_y += data->dirY * 0.1;
-		}
-		if (data->map[(int)data->pl_y][(int)(data->pl_x + data->dirX * (0.1 + 0.01))] != '1')
-		{
-			data->pl_x += data->dirX * 0.1;
-		}
-	}
-	else if (data->key.key_s == 1)
-	{		
-		if (data->map[(int)(data->pl_y - data->dirY * (0.1 + 0.01))][(int)data->pl_x] != '1')
-			data->pl_y -= data->dirY * 0.1;
-		if (data->map[(int)data->pl_y][(int)(data->pl_x + data->dirX * (0.1 + 0.01))] != '1')
-			data->pl_x -= data->dirX * 0.1;
-	}
-	else if (data->key.key_d == 1)
-	{
-    if (data->map[(int)(data->pl_y + data->planeY * (0.1 + 0.01))][(int)data->pl_x] != '1')
-        data->pl_y += data->planeY * 0.1;
-    if (data->map[(int)data->pl_y][(int)(data->pl_x + data->planeX * (0.1 + 0.01))] != '1')
-        data->pl_x += data->planeX * 0.1;
-	}
-	else if (data->key.key_a == 1)
-	{
-    if (data->map[(int)(data->pl_y - data->planeY * (0.1 + 0.01))][(int)data->pl_x] != '1')
-        data->pl_y -= data->planeY * 0.1;
-    if (data->map[(int)data->pl_y][(int)(data->pl_x - data->planeX * (0.1 + 0.01))] != '1')
-        data->pl_x -= data->planeX * 0.1;
-	}
-	else if (data->key.key_L)
-	{
-		angle = -0.03;
-		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
-		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
-		data->new_planeX = data->planeX * cos(angle) - data->planeY * sin(angle);
-		data->new_planeY = data->planeX * sin(angle) + data->planeY * cos(angle);
-		data->dirX = data->newdirX;
-		data->dirY = data->newdirY;
-		data->planeX = data->new_planeX;
-		data->planeY = data->new_planeY;
-	}
-	else if (data->key.key_R)
-	{
-		angle = 0.03;
-		data->newdirX = data->dirX * cos(angle) - data->dirY * sin(angle);
-		data->newdirY = data->dirX * sin(angle) + data->dirY * cos(angle);
-		data->new_planeX = data->planeX * cos(angle) - data->planeY * sin(angle);
-		data->new_planeY = data->planeX * sin(angle) + data->planeY *cos(angle);
-		data->dirX = data->newdirX;
-		data->dirY = data->newdirY;
-		data->planeX = data->new_planeX;
-		data->planeY = data->new_planeY;
-	}
-	else if (data->key.key_esc)
-		exit(0);
-
-}
-
-void draw_point(t_data *data, int x, int y, long color)
-{
-	int	pixel;
-
-	if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
-	{
-		pixel = (y * data->img.line_length) + (x * (data->img.bits_per_pixel
-					/ 8));
-		if (data->img.endian == 0)
-		{
-			data->img.addr[pixel + 0] = (color & 0xFF);
-			data->img.addr[pixel + 1] = (color >> 8) & 0xFF;
-			data->img.addr[pixel + 2] = (color >> 16) & 0xFF;
-			data->img.addr[pixel + 3] = (color >> 24) & 0xFF;
-		}
-		else
-		{
-			data->img.addr[pixel + 0] = (color >> 24) & 0xFF;
-			data->img.addr[pixel + 1] = (color >> 16) & 0xFF;
-			data->img.addr[pixel + 2] = (color >> 8) & 0xFF;
-			data->img.addr[pixel + 3] = (color & 0xFF);
-		}
-	}
-}
-
-int	loop(t_data	*data)
+int	loop(t_data *data)
 {
 	int	x;
 
 	x = 0;
-	//calculer le raytracing
 	while (x < 1920)
 	{
+		data->ray.mapx = (int)data->pl_x;
+		data->ray.mapy = (int)data->pl_y;
 		raycasting(data, x);
 		raycasting_suite(data);
 		ray_while_hit(data);
-		data->ray.lineHeight = HEIGHT / data->ray.perpWallDist;
-		data->ray.drawStart = -1 * data->ray.lineHeight / 2 + HEIGHT / 2;
-		if (data->ray.drawStart < 0)
-			data->ray.drawStart = 0;
-		data->ray.drawend = data->ray.lineHeight / 2 + HEIGHT / 2;
+		data->ray.lineheight = HEIGHT / data->ray.perpwalldist;
+		data->ray.drawstart = -1 * data->ray.lineheight / 2 + HEIGHT / 2;
+		if (data->ray.drawstart < 0)
+			data->ray.drawstart = 0;
+		data->ray.drawend = data->ray.lineheight / 2 + HEIGHT / 2;
 		if (data->ray.drawend >= HEIGHT)
 			data->ray.drawend = HEIGHT - 1;
-		// int	y = 0;
-		// while (y < 1080)
-		// {
-		// 	if (y >= data->ray.drawStart && y <= data->ray.drawend)
-		// 	{
-		// 		int color = RGB_Red;
-		// 		if (data->ray.side == 0)
-		// 			color = RGB_Red;
-		// 		else if (data->ray.side == 1)
-		// 			color = RGB_Green;
-		// 		if (data->ray.side == 2)
-		// 			color = RGB_White;
-		// 		else if  (data->ray.side == 3)
-		// 			color = RGB_Yellow;
-		// 		draw_point(data, x, y, color);
-		// 	}
-		// 	else
-		// 	{
-		// 		if (y > 540)
-		// 			draw_point(data, x, y, data->ray.color);
-		// 		else
-		// 		{
-		// 			int color = test;
-		// 			draw_point(data, x, y, color);
-		// 		}
-				
-		// 	}
-		// 	y++;
-		// }
 		draw_floor(data, x);
 		draw_all(data, x);
 		x++;
@@ -171,9 +53,9 @@ int	key_press(int keycode, t_data *data)
 	else if (keycode == KEY_ESC)
 		data->key.key_esc = 1;
 	else if (keycode == KEY_LEFT)
-		data->key.key_L = 1;
+		data->key.key_le = 1;
 	else if (keycode == KEY_RIGHT)
-		data->key.key_R = 1;
+		data->key.key_ri = 1;
 	return (0);
 }
 
@@ -190,9 +72,9 @@ int	key_release(int keycode, t_data *data)
 	else if (keycode == KEY_ESC)
 		data->key.key_esc = 0;
 	else if (keycode == KEY_LEFT)
-		data->key.key_L = 0;
+		data->key.key_le = 0;
 	else if (keycode == KEY_RIGHT)
-		data->key.key_R = 0;
+		data->key.key_ri = 0;
 	return (0);
 }
 
@@ -201,37 +83,10 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	char	*dst;
 
 	dst = data->img.addr + (y * HEIGHT + x * (data->img.bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	*(unsigned int *)dst = color;
 }
 
-double	get_time(void)
-{
-	struct timeval	current_time;
-
-	gettimeofday(&current_time, NULL);
-	return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
-}
-
-void	cube3d(t_data *data)
-{
-	data->img.width = 64;
-	data->img.height = 64;
-	data->recup.texture[0].width = 64;
-	data->recup.texture[0].height = 64;
-	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cube3D");
-	data->img.img = mlx_new_image(data->mlx, WIDTH, HEIGHT);
-	data->img.addr = mlx_get_data_addr(data->img.img,
-			&data->img.bits_per_pixel, &data->img.line_length,
-			&data->img.endian);
-}
-int close_window(void *arg)
-{
-    (void)arg;
-    exit(0);
-}
-
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_data	data;
 	int		fd;
@@ -245,24 +100,7 @@ int main(int ac, char **av)
 	init_xpm(&data);
 	mlx_hook(data.win, 2, 1L << 0, &key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);
-	mlx_hook(data.win, 17, 0, close_window, NULL);
+	mlx_hook(data.win, 17, 0, close_window, &data);
 	mlx_loop_hook(data.mlx, &loop, &data);
 	mlx_loop(data.mlx);
-	// (void)av;
-	// (void)ac;
-	// char *str;
-
-	// str = NULL;
-	// str = ft_puthex(15, str);
-	// if (ft_strlen(str) == 1)
-	// {
-	// 	char *tmp;
-	// 	tmp = malloc(sizeof(char) * 3);
-	// 	tmp[0] = '0';
-	// 	tmp[1] = str[0];
-	// 	tmp[2] = '\0';
-	// 	free(str);
-	// 	str = tmp;
-	// }
-	// printf("%s\n", str);
 }

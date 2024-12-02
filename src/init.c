@@ -6,59 +6,11 @@
 /*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/27 00:58:00 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:02:41 by najeuneh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cube3d.h"
-
-void	look_dir(t_data *data)
-{
-	if (data->map[(int)data->pl_y][(int)data->pl_x] == 'N')
-	{
-		data->dirX = 0;
-		data->dirY = -1;
-	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'S')
-	{
-		data->dirX = 0;
-		data->dirY = 1;
-	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'E')
-	{
-		data->dirX = 1;
-		data->dirY = 0;
-	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'W')
-	{
-		data->dirX = -1;
-		data->dirY = 0;
-	}
-}
-
-void	look_plane(t_data *data)
-{
-	if (data->map[(int)data->pl_y][(int)data->pl_x] == 'N')
-	{
-		data->planeX = 0.66;
-		data->planeY = 0;
-	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'S')
-	{
-		data->planeX = -0.66;
-		data->planeY = 0;
-	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'E')
-	{
-		data->planeX = 0;
-		data->planeY = 0.66;
-	}
-	else if (data->map[(int)data->pl_y][(int)data->pl_x] == 'W')
-	{
-		data->planeX = 0;
-		data->planeY = -0.66;
-	}	
-}
 
 size_t	ft_strlen2(const char *s)
 {
@@ -98,7 +50,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	str[i + j] = '\0';
-	free (s1);
+	free(s1);
 	return (str);
 }
 
@@ -133,8 +85,8 @@ char	*recup_map(int fd)
 void	player_pos(char **line, t_data *data)
 {
 	int	i;
-	int x;
-	
+	int	x;
+
 	data->pl_x = 0;
 	data->pl_y = 0;
 	i = 0;
@@ -143,7 +95,8 @@ void	player_pos(char **line, t_data *data)
 		x = 0;
 		while (line[i][x])
 		{
-			if (line[i][x] == 'W' || line[i][x] == 'S' || line[i][x] == 'N' || line[i][x] == 'E')
+			if (line[i][x] == 'W' || line[i][x] == 'S' || line[i][x] == 'N'
+				|| line[i][x] == 'E')
 			{
 				data->pl_x = x;
 				data->pl_y = i;
@@ -159,43 +112,18 @@ t_data	init_map(int map, int x)
 {
 	t_data	data;
 	int		y;
+	int		i;
 
 	y = 0;
-	data.ray.stepX = 0;
-	data.ray.stepY = 0;
-	data.ray.hit = 0;
-	data.ray.side = 0;
-	data.ray.mapY = 0;
-	data.ray.mapX = 0;
-	data.ray.drawStart = 0;
-	data.ray.drawend = 0;
-	data.ray.lineHeight = 0;
+	initvalue(&data);
 	data.ray.color = 0;
-	data.ray.cameraX = 0;
-	data.ray.raydirX = 0;
-	data.ray.raydirY = 0;
-	data.ray.sideDistX = 0;
-	data.ray.sideDistY = 0;
-	data.ray.deltaDistY = 0;
-	data.ray.deltaDistX = 0;
-	data.ray.perpWallDist = 0;
-	data.key.key_R = 0;
-	data.key.key_L = 0;
-	data.key.key_w = 0;
-	data.key.key_s = 0;
-	data.key.key_a = 0;
-	data.key.key_d = 0;
-	data.key.key_esc = 0;
-	data.ray.color = RGB_Blue;
 	data.line = recup_map(map);
 	data.map2 = ft_split(data.line, '\n');
 	if (pars_map(&data) == 0)
 		exit(1);
-	int i = 0;
+	i = 0;
 	while (data.map[i])
-	{
 		i++;
-	}
 	while (data.map[y][x])
 		x++;
 	data.map_x = x;
@@ -205,7 +133,5 @@ t_data	init_map(int map, int x)
 	player_pos(data.map, &data);
 	look_dir(&data);
 	look_plane(&data);
-	data.pl_x += 0.5;
-	data.pl_y += 0.5;
 	return (data);
 }
