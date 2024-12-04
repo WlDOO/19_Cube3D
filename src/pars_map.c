@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pars_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/24 19:53:21 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/11/27 06:10:11 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:05:36 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cube3d.h"
 
-int hexa_to_deci(char *hex) 
+int hexa_to_deci(char *hex)
 {
     int decimal = 0, base = 1, len, i, value;
 
@@ -55,6 +55,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	else
 		return (0);
 }
+
 static int	check_arg(const char *str, int i)
 {
 	if ((str[i] == '-' && ft_strncmp(str, "-9223372036854775808", 21) > 0)
@@ -97,6 +98,7 @@ int	ft_atoi(const char *str1)
 	}
 	return (nb * sign);
 }
+
 int	ft_strlen(char *str)
 {
 	int	i;
@@ -109,12 +111,10 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-char *ft_putchar(char c, char *str)
+char *ft_putchar(char c, char *str, int	i)
 {
-	int i;
 	char	*tmp;
 
-	i = 0;
 	tmp = NULL;
 	if (ft_strlen(str) == 0)
 	{
@@ -147,179 +147,178 @@ char	*ft_puthex(int nbr, char *str)
 	len = 16;
 	if (len > nbr)
 	{
-		str = ft_putchar(base[nbr], str); 
+		str = ft_putchar(base[nbr], str, 0); 
 	}
 	else
 	{
 		str = ft_puthex((nbr / len), str);
-		str = ft_putchar(base[nbr % len], str);
+		str = ft_putchar(base[nbr % len], str, 0);
 	}
 	return (str);
 }
 
-
-void	recup_texture(t_data *game)
+void skip_space(t_data *game, int i, int *j)
 {
-	int	i;
-	int	j;
-	int	start;
+	while (game->map2[i][*j] != ' ')
+		*j = *j + 1;
+	while (game->map2[i][*j] == ' ')
+		*j = *j + 1;
+}
+
+void recup_texture_compass(t_data *game, int i, int *j)
+{
+	if (ft_strncmp(game->map2[i], "NO", 2) == 0)
+	{
+		skip_space(game, i, j);
+		game->recup.no = ft_strdup(&game->map2[i][*j]);
+	}
+	else if (ft_strncmp(game->map2[i], "SO", 2) == 0)
+	{
+		skip_space(game, i, j);
+		game->recup.so = ft_strdup(&game->map2[i][*j]);
+	}
+	else if (ft_strncmp(game->map2[i], "WE", 2) == 0)
+	{
+		skip_space(game, i, j);
+		game->recup.wo = ft_strdup(&game->map2[i][*j]);
+	}
+	else if (ft_strncmp(game->map2[i], "EA", 2) == 0)
+	{
+		skip_space(game, i, j);
+		game->recup.eo = ft_strdup(&game->map2[i][*j]);
+	}
+}
+
+void skip_virgule_space(t_data *game, int i, int *j, int *start)
+{
+	while (game->map2[i][*j] != ' ')
+		*j = *j + 1;
+	while (game->map2[i][*j] == ' ')
+		*j = *j + 1;
+	*start = *j;
+	while (game->map2[i][*j] != ',')
+		*j = *j + 1;
+}
+void recup_texture_wall_floor(t_data *game, int i, int j, int start)
+{
 	char *str;
+	char *tmp;
 	
+	tmp = NULL;
 	str = NULL;
-	start = 0;
-	j = 0;
-	i = 0;
+	if (ft_strncmp(game->map2[i], "F ", 2) == 0)
+	{
+		game->recup.f = malloc(sizeof(char *) * 5);
+		skip_virgule_space(game, i, &j, &start);
+		tmp = ft_strndup(&game->map2[i][start], j - start);
+		game->recup.f[0] = ft_puthex(ft_atoi(tmp), NULL);
+		free(tmp);
+		if (ft_strlen(game->recup.f[0]) == 1)
+		{
+			tmp = malloc(sizeof(char) * 3);
+			tmp[0] = '0';
+			tmp[1] = game->recup.f[0][0];
+			tmp[2] = '\0';
+			free(game->recup.f[0]);
+			game->recup.f[0] = ft_strdup(tmp);
+			free(tmp);
+		}
+		j++;
+		start = j;
+		while (game->map2[i][j] != ',')
+			j++;
+		tmp = ft_strndup(&game->map2[i][start], j - start);
+		game->recup.f[1] = ft_puthex(ft_atoi(tmp), NULL);
+		free(tmp);
+		if (ft_strlen(game->recup.f[1]) == 1)
+		{
+			tmp = malloc(sizeof(char) * 3);
+			tmp[0] = '0';
+			tmp[1] = game->recup.f[1][0];
+			tmp[2] = '\0';
+			free(game->recup.f[1]);
+			game->recup.f[1] = ft_strdup(tmp);
+			free(tmp);
+		}
+		j++;
+		tmp = ft_strdup(&game->map2[i][j]);
+		game->recup.f[2] = ft_puthex(ft_atoi(tmp), NULL);
+		free(tmp);
+		if (ft_strlen(game->recup.f[2]) == 1)
+		{
+			tmp = malloc(sizeof(char) * 3);
+			tmp[0] = '0';
+			tmp[1] = game->recup.f[2][0];
+			tmp[2] = '\0';
+			free(game->recup.f[2]);
+			game->recup.f[2] = ft_strdup(tmp);
+			free(tmp);
+		}
+		game->recup.f[3] = ft_strjoin(game->recup.f[0], game->recup.f[1]);
+		game->recup.f[3] = ft_strjoin(game->recup.f[3], game->recup.f[2]);
+		game->recup.color_plafon = hexa_to_deci(game->recup.f[3]);
+	}
+	else if (ft_strncmp(game->map2[i], "C ", 2) == 0)
+	{
+		game->recup.c = malloc(sizeof(char *) * 5);
+		skip_virgule_space(game, i, &j, &start);
+		tmp = ft_strndup(&game->map2[i][start], j - start);
+		game->recup.c[0] = ft_puthex(ft_atoi(tmp), NULL);
+		free(tmp);
+		if (ft_strlen(game->recup.c[0]) == 1)
+		{
+			tmp = malloc(sizeof(char) * 3);
+			tmp[0] = '0';
+			tmp[1] = game->recup.c[0][0];
+			tmp[2] = '\0';
+			free(game->recup.c[0]);
+			game->recup.c[0] = ft_strdup(tmp);
+			free(tmp);
+		}
+		j++;
+		start = j;
+		while (game->map2[i][j] != ',')
+			j++;
+		tmp = ft_strndup(&game->map2[i][start], j - start);
+		game->recup.c[1] = ft_puthex(ft_atoi(tmp), NULL);
+		free(tmp);
+		if (ft_strlen(game->recup.c[1]) == 1)
+		{
+			tmp = malloc(sizeof(char) * 3);
+			tmp[0] = '0';
+			tmp[1] = game->recup.c[1][0];
+			tmp[2] = '\0';
+			free(game->recup.c[1]);
+			game->recup.c[1] = ft_strdup(tmp);
+			free(tmp);
+		}
+		j++;
+		tmp = ft_strdup(&game->map2[i][j]);
+		game->recup.c[2] = ft_puthex(ft_atoi(tmp), NULL);
+		free(tmp);
+		if (ft_strlen(game->recup.c[2]) == 1)
+		{
+			tmp = malloc(sizeof(char) * 3);
+			tmp[0] = '0';
+			tmp[1] = game->recup.c[2][0];
+			tmp[2] = '\0';
+			free(game->recup.c[2]);
+			game->recup.c[2] = ft_strdup(tmp);
+			free(tmp);
+		}
+		game->recup.c[3] = ft_strjoin(game->recup.c[0], game->recup.c[1]);
+		game->recup.c[3] = ft_strjoin(game->recup.c[3], game->recup.c[2]);
+		game->recup.color_sol = hexa_to_deci(game->recup.c[3]);
+	}
+}
+
+void	recup_texture(t_data *game, int i, int j, int start)
+{
 	while (game->map2[i])
 	{
 		j = 0;
-		if (ft_strncmp(game->map2[i], "NO", 2) == 0)
-		{
-			while (game->map2[i][j] != ' ')
-				j++;
-			while (game->map2[i][j] == ' ')
-				j++;
-			game->recup.no = ft_strdup(&game->map2[i][j]);
-			printf("recup no = <%s>\n", game->recup.no);
-		}
-		else if (ft_strncmp(game->map2[i], "SO", 2) == 0)
-		{
-			while (game->map2[i][j] != ' ')
-				j++;
-			while (game->map2[i][j] == ' ')
-				j++;
-			game->recup.so = ft_strdup(&game->map2[i][j]);
-			printf("recup so = <%s>\n", game->recup.so);
-		}
-		else if (ft_strncmp(game->map2[i], "WE", 2) == 0)
-		{
-			while (game->map2[i][j] != ' ')
-				j++;
-			while (game->map2[i][j] == ' ')
-				j++;
-			game->recup.wo = ft_strdup(&game->map2[i][j]);
-			printf("recup wo = <%s>\n", game->recup.wo);
-		}
-		else if (ft_strncmp(game->map2[i], "EA", 2) == 0)
-		{
-			while (game->map2[i][j] != ' ')
-				j++;
-			while (game->map2[i][j] == ' ')
-				j++;
-			game->recup.eo = ft_strdup(&game->map2[i][j]);
-			printf("recup eo = <%s>\n", game->recup.eo);
-		}
-		else if (ft_strncmp(game->map2[i], "F ", 2) == 0)
-		{
-			game->recup.f = malloc(sizeof(char *) * 5);
-			while (game->map2[i][j] != ' ')
-				j++;
-			while (game->map2[i][j] == ' ')
-				j++;
-			start = j;
-			while (game->map2[i][j] != ',')
-				j++;
-			game->recup.f[0] = ft_puthex(ft_atoi(ft_strndup(&game->map2[i][start], j - start)), NULL);
-			if (ft_strlen(game->recup.f[0]) == 1)
-			{
-				char *tmp;
-				tmp = malloc(sizeof(char) * 3);
-				tmp[0] = '0';
-				tmp[1] = game->recup.f[0][0];
-				tmp[2] = '\0';
-				free(game->recup.f[0]);
-				game->recup.f[0] = tmp;
-			}
-			printf("recup f[0] = <%s>\n", game->recup.f[0]);
-			j++;
-			start = j;
-			while (game->map2[i][j] != ',')
-				j++;
-			game->recup.f[1] = ft_puthex(ft_atoi(ft_strndup(&game->map2[i][start], j - start)), NULL);
-			if (ft_strlen(game->recup.f[1]) == 1)
-			{
-				char *tmp;
-				tmp = malloc(sizeof(char) * 3);
-				tmp[0] = '0';
-				tmp[1] = game->recup.f[1][0];
-				tmp[2] = '\0';
-				free(game->recup.f[1]);
-				game->recup.f[1] = tmp;
-			}
-			printf("recup f[1] = <%s>\n", game->recup.f[1]);
-			j++;
-			game->recup.f[2] = ft_puthex(ft_atoi(ft_strdup(&game->map2[i][j])), NULL);
-			if (ft_strlen(game->recup.f[2]) == 1)
-			{
-				char *tmp;
-				tmp = malloc(sizeof(char) * 3);
-				tmp[0] = '0';
-				tmp[1] = game->recup.f[2][0];
-				tmp[2] = '\0';
-				free(game->recup.f[2]);
-				game->recup.f[2] = tmp;
-			}
-			printf("recup f[2] = <%s>\n", game->recup.f[2]);
-			game->recup.f[3] = ft_strjoin(game->recup.f[0], game->recup.f[1]);
-			game->recup.f[3] = ft_strjoin(game->recup.f[3], game->recup.f[2]);
-			game->recup.color_plafon = hexa_to_deci(game->recup.f[3]);
-			printf("recup f final = <%d>\n", hexa_to_deci(game->recup.f[3]));
-		}
-		else if (ft_strncmp(game->map2[i], "C ", 2) == 0)
-		{
-			game->recup.c = malloc(sizeof(char *) * 5);
-			while (game->map2[i][j] != ' ')
-				j++;
-			while (game->map2[i][j] == ' ')
-				j++;
-			start = j;
-			while (game->map2[i][j] != ',')
-				j++;
-			game->recup.c[0] = ft_puthex(ft_atoi(ft_strndup(&game->map2[i][start], j - start)), NULL);
-			if (ft_strlen(game->recup.c[0]) == 1)
-			{
-				char *tmp;
-				tmp = malloc(sizeof(char) * 3);
-				tmp[0] = '0';
-				tmp[1] = game->recup.c[0][0];
-				tmp[2] = '\0';
-				free(game->recup.c[0]);
-				game->recup.c[0] = tmp;
-			}
-			printf("recup c[0] = <%s>\n", game->recup.c[0]);
-			j++;
-			start = j;
-			while (game->map2[i][j] != ',')
-				j++;
-			game->recup.c[1] = ft_puthex(ft_atoi(ft_strndup(&game->map2[i][start], j - start)), NULL);
-			if (ft_strlen(game->recup.c[1]) == 1)
-			{
-				char *tmp;
-				tmp = malloc(sizeof(char) * 3);
-				tmp[0] = '0';
-				tmp[1] = game->recup.c[1][0];
-				tmp[2] = '\0';
-				free(game->recup.c[1]);
-				game->recup.c[1] = tmp;
-			}
-			printf("recup c[1] = <%s>\n", game->recup.c[1]);
-			j++;
-			game->recup.c[2] = ft_puthex(ft_atoi(ft_strdup(&game->map2[i][j])), NULL);
-			if (ft_strlen(game->recup.c[2]) == 1)
-			{
-				char *tmp;
-				tmp = malloc(sizeof(char) * 3);
-				tmp[0] = '0';
-				tmp[1] = game->recup.c[2][0];
-				tmp[2] = '\0';
-				free(game->recup.c[2]);
-				game->recup.c[2] = tmp;
-			}
-			printf("recup c[2] = <%s>\n", game->recup.c[2]);
-			game->recup.c[3] = ft_strjoin(game->recup.c[0], game->recup.c[1]);
-			game->recup.c[3] = ft_strjoin(game->recup.c[3], game->recup.c[2]);
-			game->recup.color_sol = hexa_to_deci(game->recup.c[3]);
-			printf("recup c final = <%d>\n",  hexa_to_deci(game->recup.c[3]));
-		}
+		recup_texture_compass(game, i, &j);
+		recup_texture_wall_floor(game, i, j, start);
 		i++;
 	}
 }
@@ -333,7 +332,7 @@ void	pars_map_text(t_data *game)
 	j = 0;
 	i = 0;
 	k = 0;
-	recup_texture(game);
+	recup_texture(game, 0, 0, 0);
 	while (game->map2[i])
 	{
 		if (game->map2[i] && game->map2[i][j] && (game->map2[i][j] == '1' || game->map2[i][j] == '0' || game->map2[i][j] == ' '))
@@ -373,4 +372,11 @@ void	pars_map_text(t_data *game)
 				i++;
 		}
 	}
+	i = 0;
+	while (game->map2[i])
+	{
+		free(game->map2[i]);
+		i++;
+	}
+	free(game->map2[i]);
 }

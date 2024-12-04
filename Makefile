@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+         #
+#    By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 17:24:32 by najeuneh          #+#    #+#              #
-#    Updated: 2024/11/29 17:14:45 by najeuneh         ###   ########.fr        #
+#    Updated: 2024/12/04 17:21:36 by sadegrae         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ MY_SOURCES = src/main.c src/init.c src/ft_split.c src/raycasting/raycasting.c \
 			src/Move.c src/clean.c \
 
 CFLAGS = -Wall -Wextra -Werror -g -g3 -finline-functions -fvectorize -fslp-vectorize -ffast-math -falign-functions -funroll-loops -fstrict-aliasing \
-	 -fomit-frame-pointer -flto -Ofast -O1 -O2 -Os -O3
+	 -fomit-frame-pointer -flto -Ofast -O1 -O2 -Os -O3 #-fsanitize=address -g3
 
 OBJS_DIR = obj/
 

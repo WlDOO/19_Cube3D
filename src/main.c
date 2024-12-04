@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 19:09:39 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/29 17:13:46 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:38:44 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,6 @@ int	main(int ac, char **av)
 	mlx_hook(data.win, 3, 1L << 1, &key_release, &data);
 	mlx_hook(data.win, 17, 0, close_window, &data);
 	mlx_loop_hook(data.mlx, &loop, &data);
+	system("leaks cube3d");
 	mlx_loop(data.mlx);
 }

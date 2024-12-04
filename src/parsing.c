@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 18:08:34 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/11/27 01:17:55 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:13:26 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*ft_strchr2(char *str)
 		{
 			i++;
 			if (str[i])
-				return (ft_strdup(&str[i]));
+				return (&str[i]);
 			else
 				return (NULL);
 		}
@@ -121,8 +121,7 @@ char	*ft_strchr2(char *str)
 	return (&str[0]);
 }
 
-
-int	pars(char **av,int ac, int fd)
+int	pars(char **av, int ac, int fd)
 {
 	if (ac != 2)
 		return (printf("Error\nArguments invalid\n"), 0);
@@ -133,14 +132,28 @@ int	pars(char **av,int ac, int fd)
 	return (1);
 }
 
+void	free_struct(t_data *game)
+{
+	int	i;
+
+	i = 0;
+	while (game->map[i])
+	{
+		free(game->map[i]);
+		i++;
+	}
+	free(game->map[i]);
+	return ;
+}
+
 int	pars_map(t_data *game)
 {
 	pars_map_text(game);
-	if (check_border2(game,0 ,0 ,0) == 0)
-		return (printf("Error\nMap invalid\n"), 0);
+	if (check_border2(game, 0, 0, 0) == 0)
+		return (free_struct(game), printf("Error\nMap invalid\n"), 0);
 	if (check_border(game, 0, 0) == 0)
-		return (printf("Error\nMap invalid\n"), 0);
+		return (free_struct(game), printf("Error\nMap invalid\n"), 0);
 	if (check_map(game) == 0)
-		return (printf("Error\nMap invalid\n"), 0);
+		return (free_struct(game), printf("Error\nMap invalid\n"), 0);
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/11/29 16:02:41 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:03:20 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,10 @@ t_data	init_map(int map, int x)
 	data.line = recup_map(map);
 	data.map2 = ft_split(data.line, '\n');
 	if (pars_map(&data) == 0)
+	{
+		system("leaks cube3d");
 		exit(1);
+	}
 	i = 0;
 	while (data.map[i])
 		i++;
