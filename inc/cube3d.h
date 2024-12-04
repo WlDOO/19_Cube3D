@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube3d.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/12/02 13:46:25 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:06:00 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ typedef struct s_data
 	double			planey;
 	double			new_planex;
 	double			new_planey;
+	int				k;
 	t_img			img;
 	t_raycasting	ray;
 	t_key			key;
@@ -183,7 +184,7 @@ char				*ft_strdup(char *s1);
 char				*ft_strndup(char *s1, int n);
 char				*ft_puthex(int nbr, char *str);
 char				*ft_strjoin(char *s1, char *s2);
-void				pars_map_text(t_data *game);
+void				pars_map_text(t_data *game, int i, int j, int k);
 int					pars(char **av, int ac, int fd);
 int					pars_map(t_data *game);
 int					check_border(t_data *game, int i, int j);
@@ -195,6 +196,35 @@ int					check_map(t_data *game);
 int					ft_strlen(char *str);
 int					ft_atoi(const char *str1);
 int					hexa_to_deci(char *hex);
+
+int					f_f(char *str, char c, int t);
+char				*ft_strndup(char *s1, int n);
+char				*ft_strdup(char *s1);
+int					ft_strcmp(char *s1, char *s2);
+char				*ft_strchr2(char *str);
+int					hexa_to_deci(char *hex);
+int					ft_strncmp(const char *s1, const char *s2, size_t n);
+
+int					ft_atoi(const char *str1);
+int					ft_strlen(char *str);
+char				*ft_putchar(char c, char *str, int i);
+char				*ft_puthex(int nbr, char *str);
+void				skip_space(t_data *game, int i, int *j);
+void				free_map2(t_data *game);
+void				skip_virgule_space(t_data *game, int i, int *j, int *start);
+
+void				pars_map_text(t_data *game, int i, int j, int k);
+void				pars_map_other_attr(t_data *game, int *i, int *k);
+void				pars_map_attr(t_data *game, int *i, int *k);
+void				recup_texture(t_data *game, int i, int j, int start);
+void				recup_texture_wall_floor(t_data *game, int i, int j,
+						int start);
+
+void				recup_texture_compass(t_data *game, int i, int *j);
+void				temp_texture(t_data *game, int i, int j, int start);
+void				temp_texture_wall(t_data *game, int i, int j, int start);
+void				texture_wall(t_data *game, int i, int j, int start);
+void				texture_floor(t_data *game, int i, int j, int start);
 /*------------------*/
 
 #endif

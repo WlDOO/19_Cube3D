@@ -6,7 +6,7 @@
 #    By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/22 17:24:32 by najeuneh          #+#    #+#              #
-#    Updated: 2024/12/04 17:21:36 by sadegrae         ###   ########.fr        #
+#    Updated: 2024/12/04 20:04:51 by sadegrae         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,10 +21,11 @@ CC = cc
 
 MY_SOURCES = src/main.c src/init.c src/ft_split.c src/raycasting/raycasting.c \
 			src/check_border.c src/parsing.c src/ft_error.c src/pars_map.c src/draw.c src/init2.c \
-			src/Move.c src/clean.c \
+			src/Move.c src/clean.c src/parsing_utils.c src/parsing_utils2.c \
+			src/parsing_utils3.c src/parsing_utils4.c \
 
 CFLAGS = -Wall -Wextra -Werror -g -g3 -finline-functions -fvectorize -fslp-vectorize -ffast-math -falign-functions -funroll-loops -fstrict-aliasing \
-	 -fomit-frame-pointer -flto -Ofast -O1 -O2 -Os -O3 #-fsanitize=address -g3
+	 -fomit-frame-pointer -flto -Ofast -O1 -O2 -Os -O3
 
 OBJS_DIR = obj/
 

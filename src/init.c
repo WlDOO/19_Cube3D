@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 14:25:44 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/12/04 18:03:20 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:14:18 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ t_data	init_map(int map, int x)
 	y = 0;
 	initvalue(&data);
 	data.ray.color = 0;
+	data.k = 0;
 	data.line = recup_map(map);
 	data.map2 = ft_split(data.line, '\n');
 	if (pars_map(&data) == 0)

@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 15:11:09 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/12/04 18:36:46 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:11:06 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,6 @@ void	key_move(t_data *data)
 int	close_window(t_data *data)
 {
 	clean_all(data);
-	//system("leaks cube3d");
+	system("leaks cube3d");
 	exit(0);
 }
