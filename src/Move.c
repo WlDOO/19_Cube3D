@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 15:11:09 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/12/04 20:11:06 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/09 19:56:59 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,11 @@ void	key_move2(t_data *data, double angle)
 				+ 0.01))] != '1')
 			data->pl_x -= data->planex * 0.1;
 	}
+	else if (data->key.key_esc)
+	{
+		clean_all(data);
+		exit(0);
+	}
 	else
 		key_move3(data, angle);
 }
@@ -99,8 +104,6 @@ void	key_move(t_data *data)
 	}
 	else
 		key_move2(data, angle);
-	if (data->key.key_esc)
-		exit(0);
 }
 
 int	close_window(t_data *data)

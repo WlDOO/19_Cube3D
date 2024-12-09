@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: najeuneh < najeuneh@student.s19.be >       +#+  +:+       +#+        */
+/*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 15:27:49 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/12/02 13:45:16 by najeuneh         ###   ########.fr       */
+/*   Updated: 2024/12/09 19:31:37 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ void	draw_floor(t_data *data, int x)
 	int	color;
 
 	y = 0;
-	while (y < 1080)
+	while (y < HEIGHT)
 	{
-		if (y > 540)
+		if (y > HEIGHT / 2)
 			draw_point(data, x, y, data->recup.color_plafon);
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 20:03:14 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/12/04 20:05:13 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/09 19:43:55 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ void	recup_texture_wall_floor(t_data *game, int i, int j, int start)
 		game->recup.f[3] = ft_strjoin(game->recup.f[0], game->recup.f[1]);
 		game->recup.f[3] = ft_strjoin(game->recup.f[3], game->recup.f[2]);
 		game->recup.color_plafon = hexa_to_deci(game->recup.f[3]);
+		free(game->recup.f[1]);
+		free(game->recup.f[2]);
+		free(game->recup.f[3]);
 	}
 	else if (ft_strncmp(game->map2[i], "C ", 2) == 0)
 	{
@@ -27,6 +30,9 @@ void	recup_texture_wall_floor(t_data *game, int i, int j, int start)
 		game->recup.c[3] = ft_strjoin(game->recup.c[0], game->recup.c[1]);
 		game->recup.c[3] = ft_strjoin(game->recup.c[3], game->recup.c[2]);
 		game->recup.color_sol = hexa_to_deci(game->recup.c[3]);
+		free(game->recup.c[1]);
+		free(game->recup.c[2]);
+		free(game->recup.c[3]);
 	}
 }
 
@@ -49,6 +55,8 @@ void	pars_map_attr(t_data *game, int *i, int *k)
 		*k = *k + 1;
 	}
 	game->map = malloc(sizeof(char *) * (*k + 1));
+	if (!game->map)
+		return ;
 	*k = 0;
 	while (game->map2[*i] && (game->map2[*i][0] == '1'
 		|| game->map2[*i][0] == '0' || game->map2[*i][0] == ' '))
@@ -71,6 +79,8 @@ void	pars_map_other_attr(t_data *game, int *i, int *k)
 		|| game->map2[*i + *k][0] == '0' || game->map2[*i + *k][0] == ' '))
 		*k = *k + 1;
 	game->map = malloc(sizeof(char *) * (*k + 1));
+	if (!game->map)
+		return ;
 	*k = 0;
 	while (game->map2[*i] && (game->map2[*i][0] == '1'
 		|| game->map2[*i][0] == '0' || game->map2[*i][0] == ' '))

@@ -6,11 +6,27 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 19:52:40 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/12/04 19:53:45 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/09 19:53:01 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cube3d.h"
+
+char	*ft_putchar_next(char *tmp, char *str, int i, char c)
+{
+	tmp = malloc(sizeof(char) * (ft_strlen(str) + 2));
+	if (!tmp)
+		return (NULL);
+	while (str[i])
+	{
+		tmp[i] = str[i];
+		i++;
+	}
+	tmp[i] = c;
+	tmp[i + 1] = '\0';
+	free(str);
+	return (tmp);
+}
 
 char	*ft_putchar(char c, char *str, int i)
 {
@@ -20,22 +36,13 @@ char	*ft_putchar(char c, char *str, int i)
 	if (ft_strlen(str) == 0)
 	{
 		str = malloc(sizeof(char) * 2);
+		if (!str)
+			return (NULL);
 		str[i] = c;
 		str[i + 1] = '\0';
 	}
 	else
-	{
-		tmp = malloc(sizeof(char) * (ft_strlen(str) + 2));
-		while (str[i])
-		{
-			tmp[i] = str[i];
-			i++;
-		}
-		tmp[i] = c;
-		tmp[i + 1] = '\0';
-		free(str);
-		str = tmp;
-	}
+		str = ft_putchar_next(tmp, str, i, c);
 	return (str);
 }
 
@@ -64,19 +71,6 @@ void	skip_space(t_data *game, int i, int *j)
 		*j = *j + 1;
 	while (game->map2[i][*j] == ' ')
 		*j = *j + 1;
-}
-
-void	free_map2(t_data *game)
-{
-	int	i;
-
-	i = 0;
-	while (game->map2[i])
-	{
-		free(game->map2[i]);
-		i++;
-	}
-	free(game->map2[i]);
 }
 
 void	skip_virgule_space(t_data *game, int i, int *j, int *start)

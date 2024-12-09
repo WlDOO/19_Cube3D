@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 18:08:34 by sadegrae          #+#    #+#             */
-/*   Updated: 2024/12/04 19:45:29 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/09 19:20:14 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,10 @@ void	free_struct(t_data *game)
 
 int	pars_map(t_data *game)
 {
+	game->recup.no = NULL;
+	game->recup.so = NULL;
+	game->recup.wo = NULL;
+	game->recup.eo = NULL;
 	pars_map_text(game, 0, 0, 0);
 	if (check_border2(game, 0, 0, 0) == 0)
 		return (free_struct(game), printf("Error\nMap invalid\n"), 0);

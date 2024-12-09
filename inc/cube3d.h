@@ -6,7 +6,7 @@
 /*   By: sadegrae <sadegrae@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 16:53:56 by najeuneh          #+#    #+#             */
-/*   Updated: 2024/12/04 20:06:00 by sadegrae         ###   ########.fr       */
+/*   Updated: 2024/12/09 19:52:01 by sadegrae         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <mlx.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <sys/time.h>
 # include <unistd.h>
 
 # define PI 3.14159265359
